@@ -1,0 +1,66 @@
+.table {
+    margin: 20px;
+    align-items: flex-start; /* when big row, others should not stretch */
+}
+
+.col {
+    padding: 4px;
+    flex: 1;
+}
+  
+.row {
+    margin:6px;
+    padding: 8px;
+    color: white;
+    cursor: pointer;
+}
+
+.row0 {
+    background-color: var(--primary1);
+} 
+.row0 a {
+    color: var(--flash);
+}
+
+.row1 {
+    background-color: var(--flash);
+}
+.row1 a {
+    color: var(--secondary);
+}
+.row1 button.flash {
+    background-color: var(--primary1);
+}
+
+@media only screen and (max-width: 400px) {
+    .row {
+        font-size: 0.8rem;
+        width: 35vw;
+        height: 35vw;
+    }
+    .row.big {
+        width: 90vw;
+        height: 90vw;
+        font-size: 1.3rem;
+    }
+}
+
+@media only screen and (min-width: 401px) {
+    .row {
+        width: 10vw;
+        height: 10vw;
+    }
+    .row.big {
+        width: 30vw;
+        height: 30vw;
+    }
+}
+
+.site-name {
+    margin-right: 5px;
+    margin-bottom: 4px;
+}
+
+.add i {
+    font-size: 10vh;
+}
