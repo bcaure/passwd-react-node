@@ -3,7 +3,7 @@ export default class Row extends Component {
     constructor(props) {
       super(props);
       this.state = {...props.account};
-      this.state.edit = false;
+      this.state.edit = props.create ? true : false;
     }
 
     handleDelete(event) {     
@@ -17,6 +17,9 @@ export default class Row extends Component {
     cancelEdit(event) {
         this.setState({...this.props.account});
         this.setState({edit: false});
+        if (this.props.create) {
+            this.props.onDelete();
+        }
     }
 
     handleChange(event) {
@@ -33,8 +36,7 @@ export default class Row extends Component {
         let buttons = '';
         if (this.state.edit) {
             fields = (
-                <form onSubmit={() => this.props.onSubmit(this.state.name, this.state.url, this.state.username, this.state.password)} 
-                      className="wrap flex-center">
+                <form name="rowForm" className="wrap flex-center">
                     <input type="text" required placeholder="site name" name="name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
                     <input type="text" required placeholder="site url" name="url" value={this.state.url} onChange={(e) => this.handleChange(e)} />
                     <input type="text" required placeholder="user name" name="username" value={this.state.username} onChange={(e) => this.handleChange(e)} />
@@ -72,7 +74,7 @@ export default class Row extends Component {
             );
         }
         return (
-            <div className={'relative row row'+(this.props.index%2)+(this.props.selected?' big':'')} 
+            <div className={'flex-center relative row row'+(this.props.index%2)+(this.props.selected?' big':'')} 
                  onClick={() => this.props.onClick()}>
                 {fields}
                 {buttons}

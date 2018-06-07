@@ -40,19 +40,25 @@ class App extends Component {
   }
 
   login(username, password) {
-    this.setState({authenticated: true, username});
+    this.setState({ authenticated: true, username });
   }
 
   handleDelete(index) {
     const accounts = this.state.accounts.slice();
     accounts.splice(index, 1);
-    this.setState({accounts});
+    this.setState({ selected: null, accounts });
   }
 
-  handleValidate(index, row) {
+  handleValidate(index, account) {
     const accounts = this.state.accounts.slice();
-    accounts[index] = {...row};
-    this.setState({selected: null, accounts});
+    accounts[index] = { ...account };
+    this.setState({ accounts });
+  }
+
+  handleCreate(account) {
+    const accounts = this.state.accounts.slice();
+    accounts.push(account);
+    this.setState({ accounts });
   }
 
   render() {
@@ -61,22 +67,23 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           {
-            !this.state.authenticated && 
-              (<Login onSubmit={(username, password) => this.login(username, password) }></Login>)
-          }      
+            !this.state.authenticated &&
+            (<Login onSubmit={(username, password) => this.login(username, password)}></Login>)
+          }
           {
-            this.state.authenticated &&     
+            this.state.authenticated &&
             (<h1 className="App-title">{this.state.accounts.length} login/passwords!</h1>)
           }
         </header>
         {
-          this.state.authenticated && 
-            (
+          this.state.authenticated &&
+          (
             <Table accounts={this.state.accounts}
-                   onDelete={(index) => this.handleDelete(index)}
-                   onValidate={(index, row) => this.handleValidate(index, row)}>
+              onDelete={(index) => this.handleDelete(index)}
+              onValidate={(index, account) => this.handleValidate(index, account)}
+              onCreate={(account) => this.handleCreate(account)}>
             </Table>
-            )
+          )
         }
 
       </div>
