@@ -8,6 +8,12 @@
             "script": "start",
             "path": "front/",
             "problemMatcher": []
+        },
+        {
+            "type": "npm",
+            "script": "dev",
+            "path": "back/",
+            "problemMatcher": []
         }
     ]
 }

@@ -19,7 +19,7 @@ export default class Table extends Component {
 
     handleDelete(index) {
         this.setState({ selected: null });
-        this.props.onDelete();
+        this.props.onDelete(index);
     }
 
     handleValidate(index, row) {

@@ -4,61 +4,78 @@ import './App.css';
 import Login from './Login';
 import Table from './Table';
 
+const url = "http://localhost:3001";
+const request = {
+  headers: {
+    'user-agent': 'Mozilla/4.0 MDN Example',
+    'content-type': 'application/json'
+  },
+};
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      accounts: [
-        {
-          url: 'https://google.com',
-          username: 'ben',
-          password: 'rezzsdsffd',
-          name: 'Google'
-        },
-        {
-          url: 'https://facebook.com',
-          username: 'ben@ben.com',
-          password: 'dsxxv',
-          name: 'Facebook'
-        },
-        {
-          url: 'https://twitter.com',
-          username: 'ben@ben.com',
-          password: 'dddddssss',
-          name: 'Twitter'
-        },
-        {
-          url: 'https://pinterest.com',
-          username: 'ben@tutu.com',
-          password: 'azzoodd',
-          name: 'Pinterest'
-        }
-      ],
+      accounts: [],
       username: null,
-      authenticated: false
+      authenticated: false,
+      error: null
     };
   }
+
+  componentDidMount() {
+    fetch(`${url}/password`)
+      .then(res => res.json())
+      .then(
+        (accounts) => this.setState({ accounts }),
+        (error) => this.setState({ error })
+      );
+  }  
 
   login(username, password) {
     this.setState({ authenticated: true, username });
   }
 
   handleDelete(index) {
-    const accounts = this.state.accounts.slice();
-    accounts.splice(index, 1);
-    this.setState({ selected: null, accounts });
+    fetch(`${url}/password/${this.state.accounts[index].name}`).then(
+      (success) => {
+        const accounts = this.state.accounts.slice();
+        accounts.splice(index, 1);
+        this.setState({ selected: null, accounts });        
+      },
+      (error) => this.setState({ error })
+    );
+
   }
 
-  handleValidate(index, account) {
-    const accounts = this.state.accounts.slice();
-    accounts[index] = { ...account };
-    this.setState({ accounts });
+  handleModify(index, account) {
+    const putRequest = {...request};
+    putRequest.body = JSON.stringify(account);
+    putRequest.method = 'PUT';
+
+    fetch(`${url}/password`, putRequest).then(
+      (success) => {
+        const accounts = this.state.accounts.slice();
+        accounts[index] = { ...account };
+        this.setState({ accounts }); 
+      },
+      (error) => this.setState({ error })
+    );    
   }
 
   handleCreate(account) {
-    const accounts = this.state.accounts.slice();
-    accounts.push(account);
-    this.setState({ accounts });
+    const postRequest = {...request};
+    postRequest.body = JSON.stringify(account);
+    postRequest.method = 'POST';
+
+    fetch(`${url}/password`, postRequest).then(
+      (success) => {
+        const accounts = this.state.accounts.slice();
+        accounts.push(account);
+        this.setState({ accounts });
+      },
+      (error) => this.setState({ error })
+    );        
   }
 
   render() {
@@ -80,12 +97,12 @@ class App extends Component {
           (
             <Table accounts={this.state.accounts}
               onDelete={(index) => this.handleDelete(index)}
-              onValidate={(index, account) => this.handleValidate(index, account)}
+              onValidate={(index, account) => this.handleModify(index, account)}
               onCreate={(account) => this.handleCreate(account)}>
             </Table>
           )
         }
-
+        { this.error }
       </div>
     );
   }
