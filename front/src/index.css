@@ -89,6 +89,14 @@ a {
   align-items: center;
 }
 
+.left {
+  text-align: left;
+}
+
+.flex-left {
+  justify-content: start;
+}
+
 .relative {
   position: relative;
 }

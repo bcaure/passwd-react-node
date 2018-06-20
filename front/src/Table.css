@@ -35,24 +35,22 @@
 @media only screen and (max-width: 400px) {
     .row {
         font-size: 0.8rem;
-        width: 35vw;
-        height: 35vw;
+        min-width: 35vw;
+        min-height: 35vw;
     }
     .row.big {
         width: 90vw;
-        height: 90vw;
         font-size: 1.3rem;
     }
 }
 
 @media only screen and (min-width: 401px) {
     .row {
-        width: 10vw;
-        height: 10vw;
+        min-width: 10vw;
+        min-height: 10vw;
     }
     .row.big {
         width: 30vw;
-        height: 30vw;
     }
 }
 
@@ -63,4 +61,8 @@
 
 .add i {
     font-size: 10vh;
+}
+
+form[name="rowForm"] {
+    padding-bottom: 60px;
 }

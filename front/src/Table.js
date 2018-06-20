@@ -27,12 +27,18 @@ export default class Table extends Component {
     }
 
     handleNewRow() {
-        this.setState({newRow: {}, selected: null});
+        this.setState({newRow: {name: '', username: '', url: '', password: ''}, selected: null});
     }
 
     handleCreate(row) {
-        this.props.onCreate(row);
-        this.setState({newRow: null});
+        // check for existing name
+        if (this.props.accounts.find(account => account.name === row.name)) {
+            row.error = 'Name already exists';
+            this.setState({newRow: row});
+        } else {      
+            this.props.onCreate(row);
+            this.setState({newRow: null});
+        }
     }
 
     cancelCreate() {

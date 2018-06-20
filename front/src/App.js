@@ -19,7 +19,7 @@ class App extends Component {
       accounts: [],
       username: null,
       authenticated: false,
-      error: null
+      globalError: null
     };
   }
 
@@ -28,9 +28,9 @@ class App extends Component {
       .then(res => res.json())
       .then(
         (accounts) => this.setState({ accounts }),
-        (error) => this.setState({ error })
+        (globalError) => this.setState({ globalError })
       );
-  }  
+  }
 
   login(username, password) {
     this.setState({ authenticated: true, username });
@@ -41,15 +41,15 @@ class App extends Component {
       (success) => {
         const accounts = this.state.accounts.slice();
         accounts.splice(index, 1);
-        this.setState({ selected: null, accounts });        
+        this.setState({ selected: null, accounts });
       },
-      (error) => this.setState({ error })
+      (globalError) => this.setState({ globalError })
     );
 
   }
 
   handleModify(index, account) {
-    const putRequest = {...request};
+    const putRequest = { ...request };
     putRequest.body = JSON.stringify(account);
     putRequest.method = 'PUT';
 
@@ -57,14 +57,16 @@ class App extends Component {
       (success) => {
         const accounts = this.state.accounts.slice();
         accounts[index] = { ...account };
-        this.setState({ accounts }); 
+        this.setState({ accounts });
       },
-      (error) => this.setState({ error })
-    );    
+      (globalError) => this.setState({ globalError })
+    );
   }
 
   handleCreate(account) {
-    const postRequest = {...request};
+
+    // post new row
+    const postRequest = { ...request };
     postRequest.body = JSON.stringify(account);
     postRequest.method = 'POST';
 
@@ -74,8 +76,9 @@ class App extends Component {
         accounts.push(account);
         this.setState({ accounts });
       },
-      (error) => this.setState({ error })
-    );        
+      (globalError) => this.setState({ globalError })
+    );
+
   }
 
   render() {
@@ -102,7 +105,7 @@ class App extends Component {
             </Table>
           )
         }
-        { this.error }
+        <div className="{danger}">{this.state.globalError}</div>
       </div>
     );
   }

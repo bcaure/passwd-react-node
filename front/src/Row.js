@@ -27,16 +27,21 @@ export default class Row extends Component {
     }
 
     handleValidate(event) {
-        this.setState({edit: false});
         this.props.onValidate({...this.state});
+        this.setState({edit: false});
     }
 
     render() {
         let fields = '';
         let buttons = '';
-        if (this.state.edit) {
+        let error = '';
+        let classNames = 'relative row row'+(this.props.index%2);
+        if (this.props.selected) {
+            classNames += ' big';
+        }
+        if (this.state.edit || this.props.account.error) {
             fields = (
-                <form name="rowForm" className="wrap flex-center">
+                <form name="rowForm" className="left wrap">
                     <input type="text" required placeholder="site name" name="name" value={this.state.name} onChange={(e) => this.handleChange(e)} />
                     <input type="text" required placeholder="site url" name="url" value={this.state.url} onChange={(e) => this.handleChange(e)} />
                     <input type="text" required placeholder="user name" name="username" value={this.state.username} onChange={(e) => this.handleChange(e)} />
@@ -44,11 +49,13 @@ export default class Row extends Component {
                 </form>
             );
             buttons = (
-                <div className="absolute bottomright">
+                <div className="absolute bottomright flex-center">
+                    <div className={'danger'}>{ this.props.account.error }</div>
                     <button className="round danger" onClick={(event) => this.cancelEdit(event)}><i className="material-icons">clear</i></button>
                     <button className="round flash" onClick={(event) => this.handleValidate(event)}><i className="material-icons">done</i></button>
                 </div>
-            );            
+            );
+                      
         } else {
             let nameField = (<div className="col">{this.props.account.name}</div>);
             if (this.props.selected) {
@@ -74,9 +81,10 @@ export default class Row extends Component {
             );
         }
         return (
-            <div className={'flex-center relative row row'+(this.props.index%2)+(this.props.selected?' big':'')} 
+            <div className={classNames} 
                  onClick={() => this.props.onClick()}>
                 {fields}
+                {error}
                 {buttons}
             </div>
         );
