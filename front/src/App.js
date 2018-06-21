@@ -5,11 +5,17 @@ import Login from './Login';
 import Table from './Table';
 
 const url = "http://localhost:3001";
-const request = {
+const postRequest = {
   headers: {
-    'user-agent': 'Mozilla/4.0 MDN Example',
     'content-type': 'application/json'
   },
+  method: 'POST'
+};
+const putRequest = {
+  headers: {
+    'content-type': 'application/json'
+  },
+  method: 'PUT'
 };
 
 class App extends Component {
@@ -18,22 +24,30 @@ class App extends Component {
     this.state = {
       accounts: [],
       username: null,
-      authenticated: false,
+      authToken: null,
       globalError: null
     };
   }
 
   componentDidMount() {
-    fetch(`${url}/password`)
-      .then(res => res.json())
-      .then(
-        (accounts) => this.setState({ accounts }),
-        (globalError) => this.setState({ globalError })
-      );
+
   }
 
   login(username, password) {
-    this.setState({ authenticated: true, username });
+    const post = {...postRequest};
+    post.body = JSON.stringify({username, password});
+    fetch(`${url}/login`, post)
+      .then(res => res.json())
+      .then((response) => {
+        fetch(`${url}/password`)
+        .then(res => res.json())
+        .then(
+          (accounts) => this.setState({ authToken: response, username, accounts }),
+          (error) => this.setState({ authToken: response, username, globalError: error.msg })
+        );        
+      }, 
+      (error) => this.setState({ globalError: error.msg })
+    );
   }
 
   handleDelete(index) {
@@ -43,40 +57,39 @@ class App extends Component {
         accounts.splice(index, 1);
         this.setState({ selected: null, accounts });
       },
-      (globalError) => this.setState({ globalError })
+      (error) => this.setState({ globalError: error.msg })
     );
 
   }
 
   handleModify(index, account) {
-    const putRequest = { ...request };
-    putRequest.body = JSON.stringify(account);
-    putRequest.method = 'PUT';
 
-    fetch(`${url}/password`, putRequest).then(
+    const put = {...putRequest};
+    putRequest.body = JSON.stringify(account);
+
+    fetch(`${url}/password`, put).then(
       (success) => {
         const accounts = this.state.accounts.slice();
         accounts[index] = { ...account };
         this.setState({ accounts });
       },
-      (globalError) => this.setState({ globalError })
+      (error) => this.setState({ globalError: error.msg })
     );
   }
 
   handleCreate(account) {
 
     // post new row
-    const postRequest = { ...request };
-    postRequest.body = JSON.stringify(account);
-    postRequest.method = 'POST';
+    const post = {...postRequest};
+    post.body = JSON.stringify(account);
 
-    fetch(`${url}/password`, postRequest).then(
+    fetch(`${url}/password`, post).then(
       (success) => {
         const accounts = this.state.accounts.slice();
         accounts.push(account);
         this.setState({ accounts });
       },
-      (globalError) => this.setState({ globalError })
+      (error) => this.setState({ globalError: error.msg })
     );
 
   }
@@ -87,16 +100,16 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           {
-            !this.state.authenticated &&
+            !this.state.authToken &&
             (<Login onSubmit={(username, password) => this.login(username, password)}></Login>)
           }
           {
-            this.state.authenticated &&
+            this.state.authToken &&
             (<h1 className="App-title">{this.state.accounts.length} login/passwords!</h1>)
           }
         </header>
         {
-          this.state.authenticated &&
+          this.state.authToken &&
           (
             <Table accounts={this.state.accounts}
               onDelete={(index) => this.handleDelete(index)}

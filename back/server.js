@@ -1,4 +1,6 @@
 const express = require('express');
+var jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
@@ -42,6 +44,7 @@ app.listen(3001, function() {
     console.log('listening on 3001')
 });
 
+/***** RESTFUL PASSWORD API*****/
 app.get('/password', (req, res) => {
     res.json(data);
 });
@@ -58,14 +61,14 @@ app.put('/password', (req, res) => {
         data[idx] = req.body;
         res.sendStatus(200);
     } else {
-        res.sendStatus(400);
+        res.status(400).send({msg: 'item name not found'});
     }
 });
 
 app.post('/password', (req, res) => {
     const idx = data.findIndex(item => item.name === req.body.name);
     if (idx) {
-        res.sendStatus(400);
+        res.status(400).send({msg: 'item name already exists'});
     } else {
         data.push(req.body);
         res.sendStatus(200);
@@ -78,8 +81,22 @@ app.delete('/password/:name', (req, res) => {
         data = data.splice(idx, 1);
         res.sendStatus(200);
     } else {
-        res.sendStatus(400);
+        res.status(400).send({msg: 'item name not found'});
     }
 });
 
 
+/***** AUTHENTICATION API *****/
+app.post('/login', (req, res) => {
+    if (!req.body.username || !req.body.password) {
+        return res.status(400).send({msg: 'missing params'});
+    }
+
+    const passwordIsValid = true;//bcrypt.compareSync(req.body.password, 'p');
+    if (!passwordIsValid) {
+        return res.status(401).send({msg: 'not authorized'});
+    }
+    var token = jwt.sign({ id: req.body.username }, config.secret, { expiresIn: 3600 });// expires in 24 hours 
+    res.status(200).send({ auth: true, token: token });
+
+});

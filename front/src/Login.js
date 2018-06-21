@@ -15,16 +15,13 @@ export default class Login extends Component {
   
     render() {
       return (
-        <form onSubmit={() => this.props.onSubmit(this.state.username, this.state.password)} 
-              className="wrap flex-center">
+        <form className="wrap flex-center">
           <div>
             <input type="text" required placeholder="username" name="username" value={this.state.username} onChange={(e) => this.handleChange(e)} />
-          </div>
-          <div>
             <input type="password" required placeholder="password" name="password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
           </div>
           <div>
-            <input type="submit" value="OK" className="flash" />
+            <button className="round flash" onClick={() => this.props.onSubmit(this.state.username, this.state.password)}><i className="material-icons">done</i></button>
           </div>
         </form>
       );
