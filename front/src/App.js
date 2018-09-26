@@ -24,7 +24,7 @@ class App extends Component {
     this.state = {
       accounts: [],
       username: null,
-      authToken: null,
+      token: null,
       globalError: null
     };
   }
@@ -37,16 +37,23 @@ class App extends Component {
     const post = {...postRequest};
     post.body = JSON.stringify({username, password});
     fetch(`${url}/login`, post)
-      .then(res => res.json())
       .then((response) => {
-        fetch(`${url}/password`)
-        .then(res => res.json())
-        .then(
-          (accounts) => this.setState({ authToken: response, username, accounts }),
-          (error) => this.setState({ authToken: response, username, globalError: error.msg })
-        );        
+        const json = response.json();
+        console.log(JSON.stringify(json));
+        this.setState({token: json.token});
+        // fetch(`${url}/password`)
+        // .then(
+        //   (res) => this.setState({ accounts: res.json() }),
+        //   (error) => {
+        //     console.error(error);
+        //     this.setState({ globalError: error.msg });
+        //   }
+        // );        
       }, 
-      (error) => this.setState({ globalError: error.msg })
+      (error) => {
+        console.error(error);
+        this.setState({ globalError: error.msg });
+      }
     );
   }
 
@@ -100,16 +107,16 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           {
-            !this.state.authToken &&
+            !this.state.token &&
             (<Login onSubmit={(username, password) => this.login(username, password)}></Login>)
           }
           {
-            this.state.authToken &&
+            this.state.token &&
             (<h1 className="App-title">{this.state.accounts.length} login/passwords!</h1>)
           }
         </header>
         {
-          this.state.authToken &&
+          this.state.token &&
           (
             <Table accounts={this.state.accounts}
               onDelete={(index) => this.handleDelete(index)}
