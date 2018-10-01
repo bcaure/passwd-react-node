@@ -34,27 +34,20 @@ class App extends Component {
   }
 
   login(username, password) {
-    const post = {...postRequest};
-    post.body = JSON.stringify({username, password});
+    const post = {...postRequest, body: JSON.stringify({username, password})};
     fetch(`${url}/login`, post)
-      .then((response) => {
-        const json = response.json();
+      .then(response => response.json())
+      .then(json => {
         console.log(JSON.stringify(json));
         this.setState({token: json.token});
-        // fetch(`${url}/password`)
-        // .then(
-        //   (res) => this.setState({ accounts: res.json() }),
-        //   (error) => {
-        //     console.error(error);
-        //     this.setState({ globalError: error.msg });
-        //   }
-        // );        
-      }, 
-      (error) => {
+        return fetch(`${url}/password`)
+      })
+      .then(response => response.json())
+      .then(json => this.setState({ accounts: json }))
+      .catch(error => {
         console.error(error);
         this.setState({ globalError: error.msg });
-      }
-    );
+      });
   }
 
   handleDelete(index) {
