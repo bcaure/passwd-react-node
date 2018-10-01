@@ -96,12 +96,12 @@ app.get('/password/:name', (req, res) => {
 
 app.post('/login', (req, res) => {
     if (!req.body.username || !req.body.password) {
-        return res.sendStatus(401);
+        return res.status(401).json({ message: 'wrong credentials' });
     }
 
     const passwordIsValid = true;//bcrypt.compareSync(req.body.password, 'p');
     if (!passwordIsValid) {
-        return res.sendStatus(401);
+        return res.status(401).json({ message: 'wrong credentials' });
     }
     var token = jwt.sign({ id: req.body.username }, config.secret, { expiresIn: 3600 });// expires in 1 hour
     res.json({ token });

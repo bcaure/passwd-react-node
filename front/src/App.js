@@ -3,11 +3,12 @@ import logo from './logo.svg';
 import './App.css';
 import Login from './Login';
 import Table from './Table';
+import { manageError, processHttpStatus } from './lib/errors';
 
 const url = "http://localhost:3001";
 const postRequest = {
   headers: {
-    'content-type': 'application/json'
+    'content-type': 'application/json'  
   },
   method: 'POST'
 };
@@ -36,30 +37,25 @@ class App extends Component {
   login(username, password) {
     const post = {...postRequest, body: JSON.stringify({username, password})};
     fetch(`${url}/login`, post)
-      .then(response => response.json())
+      .then(response => processHttpStatus(response))
       .then(json => {
-        console.log(JSON.stringify(json));
         this.setState({token: json.token});
         return fetch(`${url}/password`)
       })
-      .then(response => response.json())
+      .then(response => processHttpStatus(response))
       .then(json => this.setState({ accounts: json }))
-      .catch(error => {
-        console.error(error);
-        this.setState({ globalError: error.msg });
-      });
+      .catch(error => manageError(error).then(message => this.setState({ globalError: message })));
   }
 
   handleDelete(index) {
-    fetch(`${url}/password/${this.state.accounts[index].name}`).then(
-      (success) => {
+    fetch(`${url}/password/${this.state.accounts[index].name}`)
+    .then(response => processHttpStatus(response))
+    .then(() => {
         const accounts = this.state.accounts.slice();
         accounts.splice(index, 1);
         this.setState({ selected: null, accounts });
-      },
-      (error) => this.setState({ globalError: error.msg })
-    );
-
+      })
+    .catch(error => manageError(error).then(message => this.setState({ globalError: message })));
   }
 
   handleModify(index, account) {
@@ -67,14 +63,14 @@ class App extends Component {
     const put = {...putRequest};
     putRequest.body = JSON.stringify(account);
 
-    fetch(`${url}/password`, put).then(
-      (success) => {
+    fetch(`${url}/password`, put)
+    .then(response => processHttpStatus(response))
+    .then(() => {
         const accounts = this.state.accounts.slice();
         accounts[index] = { ...account };
         this.setState({ accounts });
-      },
-      (error) => this.setState({ globalError: error.msg })
-    );
+      })
+    .catch(error => manageError(error).then(message => this.setState({ globalError: message })));
   }
 
   handleCreate(account) {
@@ -83,14 +79,14 @@ class App extends Component {
     const post = {...postRequest};
     post.body = JSON.stringify(account);
 
-    fetch(`${url}/password`, post).then(
-      (success) => {
+    fetch(`${url}/password`, post)
+      .then(response => processHttpStatus(response))
+      .then(() => {
         const accounts = this.state.accounts.slice();
         accounts.push(account);
         this.setState({ accounts });
-      },
-      (error) => this.setState({ globalError: error.msg })
-    );
+      })
+      .catch(error => manageError(error).then(message => this.setState({ globalError: message })));
 
   }
 
