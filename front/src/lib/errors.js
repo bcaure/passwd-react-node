@@ -6,11 +6,10 @@ export function processHttpStatus(response) {
     return response.json();
 }
 export function manageError(error) {
-    let errorToProcess = error;
     if (error.json) {
         return error.json().then(json => processPromiseError(json));
     } else {
-        return Promise.resolve(error);
+        return Promise.resolve(error).then(json => processPromiseError(json));
     }
 }
 
