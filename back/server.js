@@ -7,6 +7,7 @@ const cors = require('cors')
 const mysql = require('mysql');
 const config = require('./config');
 const con = mysql.createConnection(config.datasource);
+var Data = require('./data');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -40,46 +41,19 @@ con.connect((err) => {
     }
 });
 
-
-
-const data = [
-    {
-        url: 'https://google.com',
-        username: 'ben',
-        password: 'rezzsdsffd',
-        name: 'Google'
-    },
-    {
-        url: 'https://facebook.com',
-        username: 'ben@ben.com',
-        password: 'dsxxv',
-        name: 'Facebook'
-    },
-    {
-        url: 'https://twitter.com',
-        username: 'ben@ben.com',
-        password: 'dddddssss',
-        name: 'Twitter'
-    },
-    {
-        url: 'https://pinterest.com',
-        username: 'ben@tutu.com',
-        password: 'azzoodd',
-        name: 'Pinterest'
-    }
-];
-
-
-
 app.listen(3001, () => {
     console.log('listening on 3001')
 });
+
+//
+// ROUTES
+//
 
 routes = (application) => {
     /***** RESTFUL PASSWORD API*****/
     application.get('/password',
         (req, res) => {
-            res.json(data);
+            new Data(con).find(req.criteria, result => res.json(result), err => res.status(500).send({ message: err }));
         })
     application.put('/password', (req, res) => {
         console.log(req.body);
