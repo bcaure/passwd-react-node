@@ -27,13 +27,14 @@ class Data {
         INNER JOIN ${userTable} ON ${userTable}.login = ${accountTable}.user
         ${whereClause}`;
 
-        var it = this;
-        return this.con.query(sql, [criteria, criteria, criteria], function (err, result) {
-            if (err) {
-                error(err);
-            } else {
-                success(result.map(res => it.mapToObject(res)));
-            }
+        return new Promise(function(resolve, reject) {
+            this.con.query(sql, [criteria, criteria, criteria], function (err, result) {
+                if (err) {
+                    return reject(err);
+                } else {
+                    resolve(result.map(res => it.mapToObject(res)));
+                }
+            });
         });
     };
 
@@ -48,6 +49,54 @@ class Data {
 
     mapToTableRow(object) {
 
+    }
+
+    authentify(username, password) {
+
+        return this.checkAuthQuota(username)
+            .then(() => {
+
+            });
+
+        // $stmt->bindValue(':nom', $user, PDO::PARAM_STR);
+        // $stmt->execute();
+        // if ($stmt->rowCount() <= 0) {
+        //     return false;
+        // } else if ($stmt->fetchColumn() >= 10) {
+        //     return false;	
+        // } else {
+        
+        //     $stmt = $db->prepare("select * from user where login = :nom and password = :password");
+        //     $stmt->bindValue(':nom', $user, PDO::PARAM_STR);
+        //     $stmt->bindValue(':password', $password, PDO::PARAM_STR);
+        //     $stmt->execute();
+        //     if ($stmt->rowCount() > 0) {
+        //         return true;
+        //     } else {
+        //         $stmt = $db->prepare("update user set used_quota= used_quota + 1 where login = :nom");
+        //         $stmt->bindValue(':nom', $user, PDO::PARAM_STR);
+        //         $stmt->execute();
+        //         return false;
+        //     }
+        // }
+    }
+
+    checkAuthQuota(username) {
+        const queryQuota = 'select used_quota from user where login = ? ';
+        return new Promise((resolve, reject) => {
+            this.con.query(queryQuota, [username], function (err, result) {
+                if (err) {
+                    return reject(err);
+                } else {
+                    if (result && result.length > 0) {
+                        if (result[0].used_quota < 10) {
+                            resolve();
+                    } else {
+                        return reject('Quota exceeded');
+                    }
+                }
+            });
+        });
     }
 }
 module.exports = Data;

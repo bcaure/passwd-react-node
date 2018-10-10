@@ -53,7 +53,9 @@ routes = (application) => {
     /***** RESTFUL PASSWORD API*****/
     application.get('/password',
         (req, res) => {
-            new Data(con).find(req.criteria, result => res.json(result), err => res.status(500).send({ message: err }));
+            new Data(con).find(req.criteria)
+                .then(result => res.json(result))
+                .catch(err => res.status(500).send({ message: err }));
         })
     application.put('/password', (req, res) => {
         console.log(req.body);
