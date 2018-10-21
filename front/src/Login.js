@@ -33,7 +33,7 @@ export default class Login extends Component {
               value={this.state.password} onChange={(e) => this.handleChange(e)} />
           </div>
           <div>
-            <button className="round flash" onClick={(e) => this.validateAndSubmit(e)}><i className="material-icons">done</i></button>
+            <button type="button" className="round flash" onClick={() => this.props.onSubmit(this.state.username, this.state.password)}><i className="material-icons">done</i></button>
           </div>
         </form>
       );
