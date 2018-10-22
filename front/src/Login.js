@@ -4,6 +4,8 @@ import './Login.css';
 export default class Login extends Component {
     constructor(props) {
       super(props);
+      this.usernameInput = React.createRef();
+      this.passwordInput = React.createRef();
       this.state = {
         username: '',
         password: ''
@@ -11,6 +13,12 @@ export default class Login extends Component {
     }
     handleChange(e) {
       this.setState({[e.target.name]: e.target.value});
+    }
+
+    validateAndSubmit(e) {
+      if (Object.values(this.refs).reduce((prev, curr) => prev && curr.checkValidity())) {
+        this.props.onSubmit(this.state.username, this.state.password);
+      }
     }
   
     render() {
