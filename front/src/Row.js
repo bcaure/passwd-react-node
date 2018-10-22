@@ -51,7 +51,7 @@ export default class Row extends Component {
             buttons = (
                 <div className="absolute bottomright flex-center">
                     <div className={'danger'}>{ this.props.account.error }</div>
-                    <button className="round danger" onClick={(event) => this.cancelEdit(event)}><i className="material-icons">clear</i></button>
+                    <button className="round info" onClick={(event) => this.cancelEdit(event)}><i className="material-icons">clear</i></button>
                     <button className="round flash" onClick={(event) => this.handleValidate(event)}><i className="material-icons">done</i></button>
                 </div>
             );
