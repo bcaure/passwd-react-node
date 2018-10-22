@@ -29,7 +29,9 @@ export default class Login extends Component {
             <input type="password" required placeholder="password" name="password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
           </div>
           <div>
-            <button type="button" className="round flash" onClick={() => this.props.onSubmit(this.state.username, this.state.password)}><i className="material-icons">done</i></button>
+            <button type="button" className="round flash" onClick={() => this.props.onSubmit(this.state.username, this.state.password)}>
+              <i className="material-icons">done</i>
+            </button>
           </div>
         </form>
       );

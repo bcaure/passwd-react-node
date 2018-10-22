@@ -43,7 +43,7 @@ class App extends Component {
         return fetch(`${url}/password`)
       })
       .then(response => processHttpStatus(response))
-      .then(json => this.setState({ accounts: json }))
+      .then(json => this.setState({ accounts: json, username }))
       .catch(error => manageError(error).then(message => this.setState({ globalError: message })));
   }
 
@@ -94,27 +94,36 @@ class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          {
-            !this.state.token &&
-            (<Login onSubmit={(username, password) => this.login(username, password)}></Login>)
-          }
+          <div className="App-header-items">
+            <img src={logo} className="App-logo" alt="logo" />
+            {
+              !this.state.token &&
+              (<Login onSubmit={(username, password) => this.login(username, password)}></Login>)
+            }
+            {
+              this.state.token &&
+              (<div className="App-title flex">
+                <i className="secondary material-icons">person</i>
+                <span className="badge flash">{this.state.username}</span>
+                <i className="secondary material-icons">collections_bookmark</i>
+                <span className="badge round-badge flash">{this.state.accounts.length}</span>
+              </div>)
+            }
+          </div>
+        </header>
+        <div className="App-body">
           {
             this.state.token &&
-            (<h1 className="App-title">{this.state.accounts.length} login/passwords!</h1>)
+            (
+              <Table accounts={this.state.accounts}
+                onDelete={(index) => this.handleDelete(index)}
+                onValidate={(index, account) => this.handleModify(index, account)}
+                onCreate={(account) => this.handleCreate(account)}>
+              </Table>
+            )
           }
-        </header>
-        {
-          this.state.token &&
-          (
-            <Table accounts={this.state.accounts}
-              onDelete={(index) => this.handleDelete(index)}
-              onValidate={(index, account) => this.handleModify(index, account)}
-              onCreate={(account) => this.handleCreate(account)}>
-            </Table>
-          )
-        }
-        <div className="{danger}">{this.state.globalError}</div>
+          <div className="{danger}">{this.state.globalError}</div>
+        </div>
       </div>
     );
   }

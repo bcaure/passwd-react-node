@@ -1,8 +1,63 @@
+.App {
+    text-align: center;
+}
+@media only screen and (max-width: 400px) {
+    .App-header-items {
+        flex-direction: column;
+    }
+    .App-header-items > :nth-child(1) {
+        align-self: flex-start;
+    }
+    .App-header-items > :nth-child(2) {
+        margin-top: 20px;
+        align-self: flex-end;
+    }
+}
+@media only screen and (max-width: 1024px) {
+    .App-header {
+        flex-direction: column;
+    }
+    .App-header, .App-body {
+        padding-left: 20px;
+        padding-right: 20px; 
+    }    
+}
+@media only screen and (min-width: 1024px) {
+    .App-header {
+        flex-direction: column;
+        justify-content: center;
+    }
+    .App-header, .App-body {
+        padding-left: 20vw;
+        padding-right: 20vw; 
+    }
+}
+
 .App-header {
+    background-color: var(--secondary);
+    height: 150px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: white;
+    display: flex;
+}
+
+.App-header-items {
+    max-width: 1024px;
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    padding-left: 40px;
-    padding-right: 40px;
 }
+
+.App-logo {
+    animation: App-logo-spin infinite 20s linear;
+    height: 80px;
+    width: fit-content;
+}
+  
+.App-title i{
+    margin-left: 20px;
+    font-size: 3rem;
+}
+

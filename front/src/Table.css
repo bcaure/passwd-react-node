@@ -1,5 +1,12 @@
+@media only screen and (min-width: 401px) {
+    .table {
+        padding-top: 70px;
+        padding-bottom: 70px;
+    }
+}
+
 .table {
-    margin: 20px;
+    justify-content: space-between;
     align-items: flex-start; /* when big row, others should not stretch */
 }
 
@@ -9,7 +16,7 @@
 }
   
 .row {
-    margin:6px;
+    margin-top:30px;
     padding: 8px;
     color: white;
     cursor: pointer;
@@ -38,19 +45,14 @@
         min-width: 35vw;
         min-height: 35vw;
     }
-    .row.big {
-        width: 90vw;
-        font-size: 1.3rem;
-    }
 }
 
 @media only screen and (min-width: 401px) {
     .row {
-        min-width: 10vw;
-        min-height: 10vw;
-    }
-    .row.big {
-        width: 30vw;
+        min-width: 200px;
+        min-height: 180px;
+        width: 10vw;
+        height: 10vw;
     }
 }
 
