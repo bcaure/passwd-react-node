@@ -40,15 +40,29 @@ class App extends Component {
       .then(response => processHttpStatus(response))
       .then(json => {
         this.setState({token: json.token});
-        return fetch(`${url}/password`)
+        return fetch(`${url}/password`, this.authHeader())
       })
       .then(response => processHttpStatus(response))
       .then(json => this.setState({ accounts: json, username }))
       .catch(error => manageError(error).then(message => this.setState({ globalError: message })));
   }
 
+  authHeader(options) {
+    const authHeader = { 'Authorization': this.state.token };
+    if (options) {
+      if (options.headers) {
+        options.headers = { ...options.headers, ...authHeader };
+      } else {
+        options.headers = authHeader;
+      }
+    } else {
+      options = { headers: authHeader }
+    }
+    return options;
+  }
+
   handleDelete(index) {
-    fetch(`${url}/password/${this.state.accounts[index].name}`)
+    fetch(`${url}/password/${this.state.accounts[index].name}`, this.authHeader())
     .then(response => processHttpStatus(response))
     .then(() => {
         const accounts = this.state.accounts.slice();
@@ -63,7 +77,7 @@ class App extends Component {
     const put = {...putRequest};
     putRequest.body = JSON.stringify(account);
 
-    fetch(`${url}/password`, put)
+    fetch(`${url}/password`, this.authHeader(put))
     .then(response => processHttpStatus(response))
     .then(() => {
         const accounts = this.state.accounts.slice();
@@ -79,7 +93,7 @@ class App extends Component {
     const post = {...postRequest};
     post.body = JSON.stringify(account);
 
-    fetch(`${url}/password`, post)
+    fetch(`${url}/password`, this.authHeader(post))
       .then(response => processHttpStatus(response))
       .then(() => {
         const accounts = this.state.accounts.slice();

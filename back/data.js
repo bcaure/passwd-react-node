@@ -15,27 +15,25 @@ class Data {
         this.con = con;
     }
     
-    find(criteria) {
+    find(username, searchTerm) {
         const accountColumnsAlias = accountColumns.map(column => `${accountTable}.${column}`).join(', ');
         const siteColumnsAlias = siteColumns.map(column => `${siteTable}.${column}`).join(', ');
-        const whereClause = '';
-        if (criteria) {
-            whereClause = `
-            WHERE (login IS NULL OR login like ?)
-            AND (libelle IS NULL OR libelle like ?)
-            AND (url IS NULL OR url like ?)`;
-        }
         const sql = `
         SELECT DISTINCT ${accountColumnsAlias}, ${siteColumnsAlias}
         FROM ${accountTable} 
         INNER JOIN ${siteTable} ON ${siteTable}.id = ${accountTable}.id_site 
         INNER JOIN ${userTable} ON ${userTable}.login = ${accountTable}.user
-        ${whereClause}`;
+        WHERE user = ? ${ searchTerm ? 'AND (login like ? OR libelle like ? OR url like ?)' : ''}`;
+
+        let params = [username];
+        if (searchTerm) {
+            params = [...params, searchTerm, searchTerm, searchTerm];
+        }
 
         return new Promise((resolve, reject) => {
-            this.con.query(sql, [criteria, criteria, criteria], (err, result) => {
+            console.log(sql, params);
+            this.con.query(sql, params, (err, result) => {
                 if (err) {
-                    console.error(err);
                     return reject(err);
                 } else {
                     resolve(result.map(res => this.mapToObject(res)));
