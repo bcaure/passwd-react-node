@@ -1,6 +1,5 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors')
@@ -21,7 +20,7 @@ con.connect((err) => {
                 if (err) {
                     res.status(500).json({message});
                 } else {
-                    console.info("Connected to database!");
+                    console.info("Connected to database after 1 get retry!");
                     routes(app);
                 }
             });
@@ -30,7 +29,7 @@ con.connect((err) => {
                 if (err) {
                     res.status(500).json({message});
                 } else {
-                    console.info("Connected to database!");
+                    console.info("Connected to database after 1 post retry!");
                     routes(app);
                 }
             });
@@ -41,8 +40,9 @@ con.connect((err) => {
     }
 });
 
-app.listen(3001, () => {
-    console.log('listening on 3001')
+const port = 3001;
+app.listen(port, () => {
+    console.log(`listening on port ${port}`)
 });
 
 //
@@ -99,12 +99,14 @@ routes = (application) => {
             return res.status(401).json({ message: 'wrong credentials' });
         }
 
-        const passwordIsValid = true;//bcrypt.compareSync(req.body.password, 'p');
-        if (!passwordIsValid) {
+        return new Data(con).authentify(req.body.username, req.body.password).then(() => {
+            var token = jwt.sign({ id: req.body.username }, config.secret, { expiresIn: 3600 });// expires in 1 hour
+            return res.json({ token });
+        }).catch(err => {
+            console.error(err);
             return res.status(401).json({ message: 'wrong credentials' });
-        }
-        var token = jwt.sign({ id: req.body.username }, config.secret, { expiresIn: 3600 });// expires in 1 hour
-        res.json({ token });
-
+        });
     });
+
+
 }

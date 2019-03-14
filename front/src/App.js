@@ -91,6 +91,7 @@ class App extends Component {
   }
 
   render() {
+    const initiales = this.state.username ? this.state.username.substring(0, 1).toUpperCase() : '';
     return (
       <div className="App">
         <header className="App-header">
@@ -104,7 +105,7 @@ class App extends Component {
               this.state.token &&
               (<div className="App-title flex">
                 <i className="secondary material-icons">person</i>
-                <span className="badge flash">{this.state.username}</span>
+                <span className="badge flash">{initiales}</span>
                 <i className="secondary material-icons">collections_bookmark</i>
                 <span className="badge round-badge flash">{this.state.accounts.length}</span>
               </div>)

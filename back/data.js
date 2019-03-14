@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs');
+
 const accountTable = 'compte';
 const siteTable = 'site';
 const userTable = 'user';
@@ -7,6 +9,9 @@ const siteColumns = ['id', 'libelle', 'url'];
 class Data {
 
     constructor(con) {
+        if (!con) {
+            throw Error('connection required');
+        }
         this.con = con;
     }
     
@@ -55,62 +60,80 @@ class Data {
     authentify(username, password) {
 
         return this.checkAuthQuota(username)
-            .then(() => this.checkPassword(username, password))
-            .catch(() => this.updateAuthQuota(username));
+            .then(user => this.checkPassword(username, user.password, password))
+            .catch(error => this.updateAuthQuota(username, error));
 
     }
 
     checkAuthQuota(username) {
-        const queryQuota = 'select used_quota from user where login = ? ';
+        const queryQuota = 'select login, used_quota, password from user where login = ? ';
         return new Promise((resolve, reject) => {
             this.con.query(queryQuota, [username], (err, result) => {
                 if (err) {
-                    console.error(err);
-                    return reject(err);
+                    reject(err);
                 } else {
                     if (result && result.length > 0) {
                         if (result[0].used_quota < 10) {
-                            resolve();
+                            resolve(result[0]);
+                        } else {
+                            reject('Quota exceeded for '+username);
                         }
                     } else {
-                        return reject('Quota exceeded');
+                        reject('Unknown user: '+username);
                     }
                 }
             });
         });
     }
     
-    updateAuthQuota(username) {
+    updateAuthQuota(username, initialError) {
         const queryQuota = 'update user set used_quota= used_quota + 1 where login = ?';
         return new Promise((resolve, reject) => {
-            this.con.query(queryQuota, [username], (err, result) => {
+            this.con.query(queryQuota, [username], (err, _result) => {
                 if (err) {
-                    console.error(err);
-                    return reject(err);
+                    reject(err);
                 } else {
-                    resolve();
+                    reject(initialError);
                 }
             });
         });
     }
 
-    checkPassword(username, password) {
-        const queryQuota = 'select * from user where login = ? and password = ?';
+    checkPassword(username, realPassword, givenPassword) {
         return new Promise((resolve, reject) => {
-            this.con.query(queryQuota, [username, password], (err, result) => {
-                if (err) {
-                    console.error(err);
-                    return reject(err);
-                } else {
-                    if (result && result.length > 0) {
-                        resolve();
-                    } else {
-                        return reject('Authentication failed');
-                    }
-                }
-            });
+            
+            if (!bcrypt.compareSync(givenPassword, realPassword)) {
+                reject('wrong password for '+username);
+            } else {
+                resolve();
+            }
+
         });
     }
     
+    insertUser(login, password) {
+        return new Promise((resolve, reject) => {
+            this.con.query('insert into `user`(login, password, date_quota) values(?, ?, ?)', [ login, bcrypt.hashSync(password, 10), new Date() ], 
+                (error, _results, _fields) => this.manageTransaction(this.con, error, resolve, reject));
+        });
+    }
+
+    /***** UTILS *******/
+    manageTransaction(connection, error, resolve, reject) {
+        if (error) {
+            connection.rollback(() => {
+                reject(error.sqlMessage ? error.sqlMessage : error);
+            });
+        } else {
+            connection.commit((err) => {
+                if (err) {
+                    connection.rollback(() => {
+                        reject(err.sqlMessage ? err.sqlMessage : err);
+                    });
+                }
+                resolve();
+            });
+        }
+    }
 }
 module.exports = Data;
