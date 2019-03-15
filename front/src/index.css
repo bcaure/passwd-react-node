@@ -91,9 +91,16 @@ a {
   position: absolute;
 }
 
-.bottomright {
+.bottom-right {
   bottom: 10px;
   right: 10px;
+}
+
+.margin-small {
+  margin: 10px;
+}
+.padding-small {
+  padding: 5px;
 }
 
 .badge {

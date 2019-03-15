@@ -57,39 +57,85 @@ routes = (application) => {
 
     /***** RESTFUL PASSWORD API*****/
     application.get('/password', (req, res) => {
-        const username = jwt.check(req.get('Authorization'));
-        if (username) {
-            application.data.find(username, req.criteria)
+        const currentUser = jwt.check(req.get('Authorization'));
+        if (currentUser) {
+            application.data.find(currentUser, req.criteria)
                 .then(result => res.json(result))
-                .catch(err => res.status(500).send({ message: err }));
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).send({ message: 'problem occured' });
+                });
         } else {
             res.status(401).json({ message: 'wrong credentials' })
         }
     });
 
     application.put('/password', (req, res) => {
-        if (jwt.check(req.get('Authorization'))) {
-            const idx = data.findIndex(item => item.name === req.body.name);
-            if (idx) {
-                data[idx] = req.body;
-                res.sendStatus(200);
-            } else {
-                res.status(400).send({ message: 'item name not found' });
-            }
+        const currentUser = jwt.check(req.get('Authorization'));
+        if (currentUser) {
+            application.data.findByAccountId(currentUser, req.body.id)
+                .then(existingObject => {
+                    if (existingObject) {
+                        const newObject = { ...existingObject, ...req.body };
+                        application.data.updateAccountAndSite(newObject)
+                            .then(() => res.status(200).send({ message: 'OK' }))
+                            .catch(err => { 
+                                console.error(err);
+                                res.status(500).send({ message: 'problem occured' }) ;
+                            });
+                    } else {
+                        res.status(400).send({ message: 'item name not found' });
+                    }
+                })
+                .catch(err => { 
+                    console.error(err); 
+                    res.status(500).send({ message: 'problem occured' }); 
+                });
         } else {
             res.status(401).json({ message: 'wrong credentials' })
         }
     });
 
     application.post('/password', (req, res) => {
-        if (jwt.check(req.get('Authorization'))) {
-            const idx = data.findIndex(item => item.name === req.body.name);
-            if (idx) {
-                res.status(400).send({ message: 'item name already exists' });
-            } else {
-                data.push(req.body);
-                res.sendStatus(200);
-            }
+        const currentUser = jwt.check(req.get('Authorization'));
+        if (currentUser) {
+            application.data.findBySiteName(currentUser, req.body.name)
+                .then(existingSites => {
+                    if (existingSites.length > 0) {
+                        let accountExists = false;
+                        for (existingSite in existingSites) {
+                            if (existingSite.accounts 
+                                && existingSite.accounts.filter(a => a.username === req.body.username).length > 0) {
+                                    accountExists = true;
+                                    break;
+                            }
+                        }
+                        if (accountExists) {
+                            return res.status(400).send({ message: 'account already exists for this site' });
+                        } else {                
+                            // Create just account
+                            application.data.createAccount(currentUser, existingSites[0], req.body)
+                                .then(newAccount => res.status(200).send(newAccount))
+                                .catch(err => { 
+                                    console.error(err);
+                                    res.status(500).send({ message: 'problem occured' }) ;
+                                });
+                        }
+                    } else {
+                        // Create site + account
+                        application.data.createSite(req.body)
+                            .then(newSite => application.data.createAccount(currentUser, newSite, req.body))
+                            .then(newAccount => res.status(200).send(newAccount))
+                            .catch(err => { 
+                                console.error(err);
+                                res.status(500).send({ message: 'problem occured' }) ;
+                            });
+                    }
+                })
+                .catch(err => { 
+                    console.error(err); 
+                    res.status(500).send({ message: 'problem occured' }); 
+                });
         } else {
             res.status(401).json({ message: 'wrong credentials' })
         }
@@ -100,7 +146,7 @@ routes = (application) => {
             const idx = data.findIndex(item => item.name === req.body.name);
             if (idx) {
                 data = data.splice(idx, 1);
-                res.sendStatus(200);
+                res.status(200).send({ message: 'OK' });
             } else {
                 res.status(400).send({ message: 'item name not found' });
             }
@@ -110,8 +156,8 @@ routes = (application) => {
     });
 
     application.get('/password/:name', (req, res) => {
-        const username = jwt.check(req.get('Authorization'));
-        if (username) {
+        const currentUser = jwt.check(req.get('Authorization'));
+        if (currentUser) {
             res.json(data.find(item => item.name === req.params.name));
         } else {
             res.status(401).json({ message: 'wrong credentials' })

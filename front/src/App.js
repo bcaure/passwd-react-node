@@ -106,6 +106,8 @@ class App extends Component {
 
   render() {
     const initiales = this.state.username ? this.state.username.substring(0, 1).toUpperCase() : '';
+    const messageClasses = `padding-small margin-small${this.state.globalError ? ' danger' : ''}`;
+
     return (
       <div className="App">
         <header className="App-header">
@@ -127,6 +129,7 @@ class App extends Component {
           </div>
         </header>
         <div className="App-body">
+          <div className={messageClasses}>&nbsp;{this.state.globalError}</div>
           {
             this.state.token &&
             (
@@ -137,7 +140,6 @@ class App extends Component {
               </Table>
             )
           }
-          <div className="{danger}">{this.state.globalError}</div>
         </div>
       </div>
     );

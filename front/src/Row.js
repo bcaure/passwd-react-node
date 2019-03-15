@@ -49,7 +49,7 @@ export default class Row extends Component {
                 </form>
             );
             buttons = (
-                <div className="absolute bottomright flex-center">
+                <div className="absolute bottom-right flex-center">
                     <div className={'danger'}>{ this.props.account.error }</div>
                     <button className="round info" onClick={(event) => this.cancelEdit(event)}><i className="material-icons">clear</i></button>
                     <button className="round flash" onClick={(event) => this.handleValidate(event)}><i className="material-icons">done</i></button>
@@ -66,7 +66,7 @@ export default class Row extends Component {
                     </div>
                 );
                 buttons = (
-                    <div className="absolute bottomright">
+                    <div className="absolute bottom-right">
                         <button className="round danger" onClick={(event) => this.handleDelete(event)}><i className="material-icons">delete</i></button>
                         <button className="round flash" onClick={(event) => this.handleEdit(event)}><i className="material-icons">edit</i></button>
                     </div>
