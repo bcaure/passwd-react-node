@@ -81,8 +81,7 @@ class App extends Component {
 
   handleModify(index, account) {
 
-    const put = {...putRequest};
-    putRequest.body = JSON.stringify(account);
+    const put = {...putRequest, body: JSON.stringify(account)};
 
     fetch(`${url}/password`, this.authHeader(put))
     .then(response => processHttpStatus(response))
@@ -97,8 +96,7 @@ class App extends Component {
   handleCreate(account) {
 
     // post new row
-    const post = {...postRequest};
-    post.body = JSON.stringify(account);
+    const post = {...postRequest, body: JSON.stringify(account)};
 
     fetch(`${url}/password`, this.authHeader(post))
       .then(response => processHttpStatus(response))
