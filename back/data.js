@@ -4,7 +4,7 @@ const accountTable = 'compte';
 const siteTable = 'site';
 const userTable = 'user';
 const accountColumns = ['id', 'login', 'mdp', 'id_site', 'user']
-const siteColumns = ['id', 'libelle', 'url'];
+const siteColumns = ['libelle', 'url'];
 const accountColumnsAlias = accountColumns.map(column => `${accountTable}.${column}`).join(', ');
 const siteColumnsAlias = siteColumns.map(column => `${siteTable}.${column}`).join(', ');
 const selectQuery = `
@@ -103,11 +103,11 @@ class Data {
         });
     }
 
-    updateAccountAndSite(object) {
+    updateAccountAndSite(currentUser, object) {
         const tableRow = this.mapFromAccount(object);
-        const queryAccount = `update ${accountTable} set login = ?, mdp = ?  where id = ?`;
+        const queryAccount = `update ${accountTable} set login = ?, mdp = ?  where id = ? and user = ?`;
         return new Promise((resolve, reject) => {
-            this.con.query(queryAccount, [tableRow.login, tableRow.mdp, tableRow.id], (error, _result) => {
+            this.con.query(queryAccount, [tableRow.login, tableRow.mdp, tableRow.id, currentUser], (error, result) => {
                 if (error) {
                     reject(error.sqlMessage ? `${queryAccount} : \n ${error.sqlMessage}` : error);
                 } else {
@@ -117,9 +117,30 @@ class Data {
                         if (err) {
                             reject(err.sqlMessage ? `${querySite} : \n ${err.sqlMessage}` : err);
                         } else {
-                            resolve();
+                            if (result.affectedRows === 0) {
+                                reject(`No row to update having id ${tableRow.id} for user ${currentUser}`)
+                            } else {
+                                resolve();
+                            }
                         }
                     });
+                }
+            });
+        });
+    }
+
+    deleteAccount(currentUser, id) {
+        const sql = `delete from ${accountTable} where id = ? and user = ?`;
+        return new Promise((resolve, reject) => {
+            this.con.query(sql, [id, currentUser], (error, result) => {
+                if (error) {
+                    reject(error.sqlMessage ? `${queryAccount} : \n ${error.sqlMessage}` : error);
+                } else {
+                    if (result.affectedRows === 0) {
+                        reject(`No row to delete having id ${id} for user ${currentUser}`)
+                    } else {
+                        resolve();
+                    }
                 }
             });
         });

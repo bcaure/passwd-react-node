@@ -77,7 +77,7 @@ routes = (application) => {
                 .then(existingObject => {
                     if (existingObject) {
                         const newObject = { ...existingObject, ...req.body };
-                        application.data.updateAccountAndSite(newObject)
+                        application.data.updateAccountAndSite(currentUser, newObject)
                             .then(() => res.status(200).send({ message: 'OK' }))
                             .catch(err => { 
                                 console.error(err);
@@ -141,15 +141,15 @@ routes = (application) => {
         }
     });
 
-    application.delete('/password/:name', (req, res) => {
-        if (jwt.check(req.get('Authorization'))) {
-            const idx = data.findIndex(item => item.name === req.body.name);
-            if (idx) {
-                data = data.splice(idx, 1);
-                res.status(200).send({ message: 'OK' });
-            } else {
-                res.status(400).send({ message: 'item name not found' });
-            }
+    application.delete('/password/:id', (req, res) => {
+        const currentUser = jwt.check(req.get('Authorization'));
+        if (currentUser) {
+            application.data.deleteAccount(currentUser, req.params.id)
+                .then(() => res.status(200).send({ message: 'OK' }))
+                .catch(err => { 
+                    console.error(err);
+                    res.status(500).send({ message: 'problem occured' }) ;
+                });
         } else {
             res.status(401).json({ message: 'wrong credentials' })
         }

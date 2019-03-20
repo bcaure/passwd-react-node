@@ -18,6 +18,12 @@ const putRequest = {
   },
   method: 'PUT'
 };
+const deleteRequest = {
+  headers: {
+    'content-type': 'application/json'  
+  },
+  method: 'DELETE'
+};
 
 class App extends Component {
   constructor(props) {
@@ -62,7 +68,8 @@ class App extends Component {
   }
 
   handleDelete(index) {
-    fetch(`${url}/password/${this.state.accounts[index].name}`, this.authHeader())
+    const delete_ = {...deleteRequest};
+    fetch(`${url}/password/${this.state.accounts[index].id}`, this.authHeader(delete_))
     .then(response => processHttpStatus(response))
     .then(() => {
         const accounts = this.state.accounts.slice();
