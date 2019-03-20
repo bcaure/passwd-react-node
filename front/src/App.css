@@ -58,6 +58,7 @@
   
 .App-title i{
     margin-left: 20px;
-    font-size: 3rem;
+    font-size: 2rem;
+    color: var(--info);
 }
 

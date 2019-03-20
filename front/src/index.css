@@ -105,11 +105,13 @@ a {
 
 .badge {
   font-size: small;
-  padding: 8px;
-  min-width: 20px;
-  height: 20px;
-  line-height: 20px;
+  padding: 7px;
+  min-width: 10px;
+  height: 10px;
+  line-height: 10px;
   border-radius: 20px;
+  font-size: 0.6rem;
+  margin-top: -10px;
 }
 
 .round-badge {

@@ -24,11 +24,12 @@ class Data {
 
     find(currentUser, searchTerm) {
         const sql = `${selectQuery}
-        WHERE user = ? ${ searchTerm ? 'AND (login like ? OR libelle like ? OR url like ?)' : ''}`;
+        WHERE user = ? ${ searchTerm ? 'AND (lower(libelle) like ? OR lower(url) like ?)' : ''}`;
 
         let params = [currentUser];
         if (searchTerm) {
-            params = [...params, searchTerm, searchTerm, searchTerm];
+            const likeParam = `%${searchTerm.toLowerCase()}%`;
+            params = [...params, likeParam, likeParam];
         }
 
         return new Promise((resolve, reject) => {

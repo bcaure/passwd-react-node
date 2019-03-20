@@ -59,7 +59,7 @@ routes = (application) => {
     application.get('/password', (req, res) => {
         const currentUser = jwt.check(req.get('Authorization'));
         if (currentUser) {
-            application.data.find(currentUser, req.criteria)
+            application.data.find(currentUser, req.query.search)
                 .then(result => res.json(result))
                 .catch(err => {
                     console.error(err);
@@ -154,16 +154,6 @@ routes = (application) => {
             res.status(401).json({ message: 'wrong credentials' })
         }
     });
-
-    application.get('/password/:name', (req, res) => {
-        const currentUser = jwt.check(req.get('Authorization'));
-        if (currentUser) {
-            res.json(data.find(item => item.name === req.params.name));
-        } else {
-            res.status(401).json({ message: 'wrong credentials' })
-        }
-    });
-
 
 
     /***** AUTHENTICATION API *****/

@@ -32,7 +32,9 @@ class App extends Component {
       accounts: [],
       username: null,
       token: null,
-      globalError: null
+      globalError: null,
+      filterInputTimeout: null, 
+      previousFilterValue: ''
     };
   }
 
@@ -109,6 +111,19 @@ class App extends Component {
 
   }
 
+  handleFilterChanged(value) {
+    if (value !== this.state.previousFilterValue) {
+      clearTimeout(this.filterInputTimeout);
+      const timer = setTimeout(() => {
+        fetch(`${url}/password?search=${encodeURIComponent(value)}`, this.authHeader())
+          .then(response => processHttpStatus(response))
+          .then(json => this.setState({ accounts: json, username: this.state.username }))
+          .catch(error => manageError(error).then(message => this.setState({ globalError: message })));
+      }, 500);
+      this.setState({filterInputTimeout: timer, previousFilterValue: value});
+    }
+  }
+
   render() {
     const initiales = this.state.username ? this.state.username.substring(0, 1).toUpperCase() : '';
     const messageClasses = `padding-small margin-small${this.state.globalError ? ' danger' : ''}`;
@@ -124,7 +139,9 @@ class App extends Component {
             }
             {
               this.state.token &&
-              (<div className="App-title flex">
+              (
+              <div className="App-title flex">
+                <input type="text" name="searchFilter" placeholder="Search..." onKeyUp={event => this.handleFilterChanged(event.target.value)} />
                 <i className="secondary material-icons">person</i>
                 <span className="badge flash">{initiales}</span>
                 <i className="secondary material-icons">collections_bookmark</i>
