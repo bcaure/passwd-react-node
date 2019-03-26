@@ -1,64 +1,103 @@
 .App {
     text-align: center;
-}
-@media only screen and (max-width: 400px) {
-    .App-header-items {
-        flex-direction: column;
-    }
-    .App-header-items > :nth-child(1) {
-        align-self: flex-start;
-    }
-    .App-header-items > :nth-child(2) {
-        margin-top: 20px;
-        align-self: flex-end;
-    }
-}
-@media only screen and (max-width: 1024px) {
-    .App-header {
-        flex-direction: column;
-    }
-    .App-header, .App-body {
-        padding-left: 20px;
-        padding-right: 20px; 
-    }    
-}
-@media only screen and (min-width: 1024px) {
-    .App-header {
-        flex-direction: column;
-        justify-content: center;
-    }
-    .App-header, .App-body {
-        padding-left: 20vw;
-        padding-right: 20vw; 
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
+.App-header, .App-body {
+    width: 100%;
+}    
+
 .App-header {
+    justify-content: center;
     background-color: var(--secondary);
-    height: 110px;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    min-height: 110px;
+    max-height: 200px;
     color: white;
     display: flex;
 }
 
 .App-header-items {
-    max-width: 1024px;
+    max-width: 1200px;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 20px;
 }
 
 .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-    height: 80px;
+    max-height: 80px;
     width: fit-content;
-}
-  
-.App-title i{
-    margin-left: 20px;
-    font-size: 2rem;
-    color: var(--info);
+    max-width: 30vw;
+    cursor: pointer;
+    opacity: 0.9;
+    transition:width 300ms ease-in-out, height 300ms ease-in-out;
 }
 
+.App-logo:hover {
+    max-height: 90px;
+    opacity: 1;
+}
+
+.App-title {
+    justify-content: flex-end;
+}
+
+@media only screen and (min-width: 769px) {
+    .App-title {
+        width: 500px;
+    }
+}
+@media only screen and (max-width: 768px) {
+    .App-title {
+        width: 60vw;
+    }
+}
+
+.App-title i {
+    margin-left: 20px;
+    font-size: 2rem;
+    color: white;
+    cursor: pointer;
+    opacity: 0.9;
+}
+
+.App-title i:hover {
+    opacity: 1;
+}
+
+.App-title .badge {
+    align-self: flex-end;
+}
+
+.App-title #search-filter {
+    margin: 0px;
+    color: white;
+}
+
+@media only screen and (min-width: 1500px) and (max-width: 1599px) {
+    .App-body > .table {
+        max-width: 80vw!important;
+    }
+}
+
+
+@media only screen and (min-width: 1600px) {
+    .App-body > .table {
+        max-width: 75vw!important;
+    }
+}
+
+#login-form input:-webkit-autofill,
+#login-form input:-webkit-autofill:hover,
+#login-form input:-webkit-autofill:focus,
+#login-form input:-webkit-autofill:active {
+    color: var(--primary2)!important;
+}
+
+.App-body > .table {
+    max-width: fit-content;
+    justify-content: center;
+}

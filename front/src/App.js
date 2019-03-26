@@ -43,6 +43,7 @@ class App extends Component {
   }
 
   login(username, password) {
+    this.setState({ globalError: null });
     const post = {...postRequest, body: JSON.stringify({username, password})};
     fetch(`${url}/login`, post)
       .then(response => processHttpStatus(response))
@@ -70,6 +71,7 @@ class App extends Component {
   }
 
   handleDelete(index) {
+    this.setState({ globalError: null });
     const delete_ = {...deleteRequest};
     fetch(`${url}/password/${this.state.accounts[index].id}`, this.authHeader(delete_))
     .then(response => processHttpStatus(response))
@@ -82,9 +84,8 @@ class App extends Component {
   }
 
   handleModify(index, account) {
-
+    this.setState({ globalError: null });
     const put = {...putRequest, body: JSON.stringify(account)};
-
     fetch(`${url}/password`, this.authHeader(put))
     .then(response => processHttpStatus(response))
     .then(() => {
@@ -96,10 +97,8 @@ class App extends Component {
   }
 
   handleCreate(account) {
-
-    // post new row
+    this.setState({ globalError: null });
     const post = {...postRequest, body: JSON.stringify(account)};
-
     fetch(`${url}/password`, this.authHeader(post))
       .then(response => processHttpStatus(response))
       .then(() => {
@@ -112,6 +111,7 @@ class App extends Component {
   }
 
   handleFilterChanged(value) {
+    this.setState({ globalError: null });
     if (value !== this.state.previousFilterValue) {
       clearTimeout(this.filterInputTimeout);
       const timer = setTimeout(() => {
@@ -126,7 +126,7 @@ class App extends Component {
 
   render() {
     const initiales = this.state.username ? this.state.username.substring(0, 1).toUpperCase() : '';
-    const messageClasses = `padding-small margin-small${this.state.globalError ? ' danger' : ''}`;
+    const messageClasses = `padding-small ${this.state.globalError ? ' danger' : ''}`;
 
     return (
       <div className="App">
@@ -134,14 +134,10 @@ class App extends Component {
           <div className="App-header-items">
             <img src={logo} className="App-logo" alt="logo" />
             {
-              !this.state.token &&
-              (<Login onSubmit={(username, password) => this.login(username, password)}></Login>)
-            }
-            {
               this.state.token &&
               (
-              <div className="App-title flex">
-                <input type="text" name="searchFilter" placeholder="Search..." onKeyUp={event => this.handleFilterChanged(event.target.value)} />
+              <div className="App-title flex wrap-reverse">
+                <input type="text" id="search-filter" name="searchFilter" placeholder="Search..." onKeyUp={event => this.handleFilterChanged(event.target.value)} />
                 <i className="secondary material-icons">person</i>
                 <span className="badge flash">{initiales}</span>
                 <i className="secondary material-icons">collections_bookmark</i>
@@ -150,8 +146,12 @@ class App extends Component {
             }
           </div>
         </header>
-        <div className="App-body">
+        <div className="App-body flex-column flex-center margin-small">
           <div className={messageClasses}>&nbsp;{this.state.globalError}</div>
+          {
+              !this.state.token &&
+              (<Login onSubmit={(username, password) => this.login(username, password)}></Login>)
+          }
           {
             this.state.token &&
             (

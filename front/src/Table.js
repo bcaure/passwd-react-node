@@ -11,10 +11,14 @@ export default class Table extends Component {
         };
     }
 
-    handleRowClick(index) {
+    handleRowEdit(index) {
         if (this.state.selected !== index) {
             this.setState({ selected: index });
         }
+    }
+
+    handleRowCancelEdit(index) {
+        this.setState({ selected: null });
     }
 
     handleDelete(index) {
@@ -30,15 +34,9 @@ export default class Table extends Component {
         this.setState({newRow: {name: '', username: '', url: '', password: ''}, selected: null});
     }
 
-    handleCreate(row) {
-        // check for existing name
-        if (this.props.accounts.find(account => account.name === row.name)) {
-            row.error = 'Name already exists';
-            this.setState({newRow: row});
-        } else {      
-            this.props.onCreate(row);
-            this.setState({newRow: null});
-        }
+    handleCreate(row) {  
+        this.props.onCreate(row);
+        this.setState({newRow: null});
     }
 
     cancelCreate() {
@@ -47,18 +45,24 @@ export default class Table extends Component {
 
     render() {
         const table = this.props.accounts.map((account, index) => {
-            return <Row key={account.name} account={account} index={index} selected={index === this.state.selected}
-                onClick={() => this.handleRowClick(index)}
-                onDelete={() => this.handleDelete(index)}
-                onValidate={(row) => this.handleValidate(index, row)}>
-            </Row>
+            return (
+                <Row key={account.name} account={account} index={index}
+                    edit={index === this.state.selected}
+                    onEdit={() => this.handleRowEdit(index)}
+                    onCancelEdit={(row) => this.handleRowCancelEdit(row)}
+                    onDelete={() => this.handleDelete(index)}
+                    onValidate={(row) => this.handleValidate(index, row)}>
+                </Row>
+            );
         });
 
         let lastRow = undefined;
         if (this.state.newRow) {
             lastRow = (
-                <Row account={this.state.newRow} index={this.props.accounts.length+1} selected={true} create={true}
-                    onClick={() => {}}
+                <Row account={this.state.newRow} index={this.props.accounts.length + 1}
+                    edit={true} create={true}
+                    onEdit={() => {}}
+                    onCancelEdit={(row) => this.handleRowCancelEdit(row)}
                     onDelete={() => this.cancelCreate()}
                     onValidate={(row) => this.handleCreate(row)}>
                 </Row>
@@ -66,7 +70,7 @@ export default class Table extends Component {
         } else {
             lastRow = (
                 <div className={'relative flex-center add row row' + (this.props.accounts.length % 2)}
-                    onClick={() => this.handleNewRow()}>
+                     onClick={() => this.handleNewRow()}>
                     <i className="material-icons">add</i>
                 </div>
             );

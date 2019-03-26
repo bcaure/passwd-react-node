@@ -1,12 +1,23 @@
 @import 'theme.css';
 
-/* @keyframes App-logo-spin {
-  from { transform: rotate(-10deg); }
-  to { transform: rotate(10deg); }
-} */
-
 input {
   min-width: 150px;
+}
+
+input[type='text'], input[type='password'] {
+  border: 0;
+  border-bottom: 1px solid;
+  padding: 8px;
+  background-color: transparent!important;
+  margin: 0;
+}
+
+/* désactivation couleur chrome autocomplete */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 50000s ease-in-out 0s, color 5000s ease-in-out 0s;
 }
 
 
@@ -48,8 +59,9 @@ a {
 }
 
 .danger {
-  background-color: var(--danger);
-  color: white;  
+  color: var(--danger);
+  font-size: 0.8rem;
+  font-weight: bold
 }
 
 .info {
@@ -69,10 +81,30 @@ a {
   flex-wrap: wrap;
 }
 
+.wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
 .flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media only screen and (max-width: 500px) {
+  .flex-xs {
+    flex-direction: column;
+  }
+}
+@media only screen and (min-width: 501px) {
+  .flex-xs {
+    flex-direction: row;
+  }
 }
 
 .left {
@@ -111,7 +143,12 @@ a {
   line-height: 10px;
   border-radius: 20px;
   font-size: 0.6rem;
-  margin-top: -10px;
+  cursor: default;
+  opacity: 0.9;
+}
+
+.badge:hover {
+  opacity: 1;
 }
 
 .round-badge {

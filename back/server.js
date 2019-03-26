@@ -4,7 +4,7 @@ const app = express();
 const cors = require('cors')
 const config = require('./config');
 const mysql = require('mysql');
-const con = mysql.createConnection(config.datasource);
+let con = mysql.createConnection(config.datasource);
 const Data = require('./data');
 const Jwt = require('./jwt');
 const jwt = new Jwt();
@@ -14,9 +14,10 @@ app.use(cors());
 
 con.connect((err) => {
     if (err) {
-        const message = 'Cannot connect to database';
+        const message = 'Impossible de se connecter à la base de données';
         console.error(message);
         app.get('/*', (_req, res) => {
+            con = mysql.createConnection(config.datasource);
             con.connect((err) => {
                 if (err) {
                     res.status(500).json({ message });
@@ -27,6 +28,7 @@ con.connect((err) => {
                 }
             });
         }).post('/*', (_req, res) => {
+            con = mysql.createConnection(config.datasource);
             con.connect((err) => {
                 if (err) {
                     res.status(500).json({ message });
@@ -63,10 +65,10 @@ routes = (application) => {
                 .then(result => res.json(result))
                 .catch(err => {
                     console.error(err);
-                    res.status(500).send({ message: 'problem occured' });
+                    res.status(500).send({ message: 'Une erreur s\'est produite' });
                 });
         } else {
-            res.status(401).json({ message: 'wrong credentials' })
+            res.status(401).json({ message: 'Vous n\'avez pas l\'autorisation d\'effectuer cette opération' })
         }
     });
 
@@ -81,18 +83,18 @@ routes = (application) => {
                             .then(() => res.status(200).send({ message: 'OK' }))
                             .catch(err => { 
                                 console.error(err);
-                                res.status(500).send({ message: 'problem occured' }) ;
+                                res.status(500).send({ message: 'Une erreur s\'est produite' }) ;
                             });
                     } else {
-                        res.status(400).send({ message: 'item name not found' });
+                        res.status(400).send({ message: 'Ce compte est introuvable' });
                     }
                 })
                 .catch(err => { 
                     console.error(err); 
-                    res.status(500).send({ message: 'problem occured' }); 
+                    res.status(500).send({ message: 'Une erreur s\'est produite' }); 
                 });
         } else {
-            res.status(401).json({ message: 'wrong credentials' })
+            res.status(401).json({ message: 'Vous n\'avez pas l\'autorisation d\'effectuer cette opération' })
         }
     });
 
@@ -111,14 +113,14 @@ routes = (application) => {
                             }
                         }
                         if (accountExists) {
-                            return res.status(400).send({ message: 'account already exists for this site' });
+                            return res.status(400).send({ message: 'Ce compte existe déjà pour ce site' });
                         } else {                
                             // Create just account
                             application.data.createAccount(currentUser, existingSites[0], req.body)
                                 .then(newAccount => res.status(200).send(newAccount))
                                 .catch(err => { 
                                     console.error(err);
-                                    res.status(500).send({ message: 'problem occured' }) ;
+                                    res.status(500).send({ message: 'Une erreur s\'est produite' }) ;
                                 });
                         }
                     } else {
@@ -128,16 +130,16 @@ routes = (application) => {
                             .then(newAccount => res.status(200).send(newAccount))
                             .catch(err => { 
                                 console.error(err);
-                                res.status(500).send({ message: 'problem occured' }) ;
+                                res.status(500).send({ message: 'Une erreur s\'est produite' }) ;
                             });
                     }
                 })
                 .catch(err => { 
                     console.error(err); 
-                    res.status(500).send({ message: 'problem occured' }); 
+                    res.status(500).send({ message: 'Une erreur s\'est produite' }); 
                 });
         } else {
-            res.status(401).json({ message: 'wrong credentials' })
+            res.status(401).json({ message: 'Vous n\'avez pas l\'autorisation d\'effectuer cette opération' })
         }
     });
 
@@ -148,10 +150,10 @@ routes = (application) => {
                 .then(() => res.status(200).send({ message: 'OK' }))
                 .catch(err => { 
                     console.error(err);
-                    res.status(500).send({ message: 'problem occured' }) ;
+                    res.status(500).send({ message: 'Une erreur s\'est produite' }) ;
                 });
         } else {
-            res.status(401).json({ message: 'wrong credentials' })
+            res.status(401).json({ message: 'Vous n\'avez pas l\'autorisation d\'effectuer cette opération' })
         }
     });
 
@@ -160,14 +162,14 @@ routes = (application) => {
 
     application.post('/login', (req, res) => {
         if (!req.body.username || !req.body.password) {
-            return res.status(401).json({ message: 'wrong credentials' });
+            return res.status(401).json({ message: 'Veuillez saisir un nom d\'utilisateur et un mot de passe' });
         }
 
         return new Data(con).authentify(req.body.username, req.body.password)
             .then(() => res.json({ token: jwt.generate(req.body.username) }))
             .catch(err => {
                 console.error(err);
-                return res.status(401).json({ message: 'wrong credentials' });
+                return res.status(401).json({ message: 'Nom d\'utilisateur ou mot de passe erroné' });
             });
     });
 
