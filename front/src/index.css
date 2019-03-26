@@ -45,17 +45,17 @@ a {
 
 .primary {
   background-color: var(--primary1);
-  color: white;
+  color: var(--primary2);
 }
 
 .secondary {
   background-color: var(--secondary);
-  color: white;
+  color: var(--primary2);
 }
 
 .flash {
   background-color: var(--flash);
-  color: white;
+  color: var(--primary2);
 }
 
 .danger {

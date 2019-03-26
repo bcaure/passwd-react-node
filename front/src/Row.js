@@ -33,7 +33,7 @@ export default class Row extends Component {
         let fields = '';
         let buttons = '';
         let error = '';
-        let classNames = 'relative row row'+(this.props.index%7);
+        let classNames = 'relative card card'+(this.props.index%7);
         if (this.props.edit) {
             classNames += ' big';
         }
@@ -56,12 +56,6 @@ export default class Row extends Component {
             );
                       
         } else {
-            const nameField = (
-                <div className="col flex-center">             
-                    <div className="site-name">{this.props.account.name}</div>
-                    <a href={this.props.account.url}><i className="material-icons">exit_to_app</i></a>
-                </div>
-            );
             buttons = (
                 <div className="absolute bottom-right">
                     <button className="round danger" onClick={(event) => this.handleDelete(event)}><i className="material-icons">delete</i></button>
@@ -69,18 +63,19 @@ export default class Row extends Component {
                 </div>
             );
             fields = (
-                <div>
-                    {nameField}
-                    <div className="col username">{this.props.account.username}</div>
-                    <div className="col password">{this.props.account.password}</div>
-                </div>
+                <div className="site-name" onClick={() => window.open(this.props.account.url)}>{this.props.account.name}</div>
             );
+            classNames += ' flex-center';
         }
         return (
-            <div className={classNames}>
-                {fields}
-                {error}
-                {buttons}
+            <div className="cell">
+                <div className="col username">{this.props.account.username}</div>
+                <div className={classNames}>
+                    {fields}
+                    {error}
+                    {buttons}
+                </div>
+                <div className="col password">{this.props.account.password}</div>
             </div>
         );
     }

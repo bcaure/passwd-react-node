@@ -69,7 +69,7 @@ export default class Table extends Component {
             );
         } else {
             lastRow = (
-                <div className={'relative flex-center add row row' + (this.props.accounts.length % 2)}
+                <div className={'relative flex-center add card card' + (this.props.accounts.length % 2)}
                      onClick={() => this.handleNewRow()}>
                     <i className="material-icons">add</i>
                 </div>

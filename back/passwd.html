@@ -25,13 +25,13 @@
     <div class="container">
 
         <!-- HEADER COUNT -->
-		<div class="page-header row">
+		<div class="page-header card">
 			<div class="text-center col-md-12">
 				<h1><span class="label label-primary" style="position: relative;top: -5px">{{ main.passwords.length }}</span>&nbsp;login/passwords!</h1>
 			</div>
 		</div>
         <!-- LIST -->
-		<form ng-submit="main.show()" class="row" style="margin-bottom:1vh" ng-hide="main.isConnected">
+		<form ng-submit="main.show()" class="card" style="margin-bottom:1vh" ng-hide="main.isConnected">
 			<div class="col-xs-12 col-md-2 col-md-offset-1">
 				<input type="text" class="form-control input-lg text-center" 
 					   required placeholder="login" ng-model="main.formData.user">
@@ -47,13 +47,13 @@
 		<div class="label label-error">
 			{{ main.errorMsg }}
 		</div>
-        <div id="passwords-list" class="row" ng-show="main.isConnected && main.passwords.length > 0">
+        <div id="passwords-list" class="card" ng-show="main.isConnected && main.passwords.length > 0">
             <div class="table-responsive">
 
 				<div class="panel panel-primary">
 				  <!-- Default panel contents -->
 				  <div class="panel-heading container">
-					  <div class="row">
+					  <div class="card">
 						  <div class="col-xs-4 col-md-2"><h4>Result</h4></div>
 						  <div class="col-xs-6 col-md-4 col-md-offset-2">
 							  <input type="text" class="form-control" placeholder="Type text here..." ng-model="main.searchText.$"

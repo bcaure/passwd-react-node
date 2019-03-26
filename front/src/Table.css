@@ -1,97 +1,129 @@
 .table {
     justify-content: space-between;
-    align-items: flex-start; /* when big row, others should not stretch */
+    align-items: flex-start; /* when big card, others should not stretch */
 }
 
 .col {
     padding: 4px;
     flex: 1;
 }
-  
-.row {
-    margin-top:70px;
+
+.cell {
+    margin-bottom: 60px;
     margin-left: 10px;
     margin-right: 10px;
+}
+
+.card {
     padding: 8px;
-    color: white;
+    color: var(--primary2);
     cursor: pointer;
     min-width: 262px;
     min-height: 276px;
     opacity: 0.9;
 }
 
-.row:hover {
+.card:hover {
     opacity: 1;
 }
 
 @media only screen and (max-width: 400px) {
-    .row {
+    .card {
         font-size: 0.8rem;
     }
 }
 
 @media only screen and (min-width: 401px) {
-    .row {
+    .card {
         width: 10vw;
         height: 10vw;
     }
 }
 
-.row button, .row .password {
+.card::before, .card::after {
+    background: #616161 none repeat scroll 0 0;
+    content: "";
+    height: 40px;
+    position: absolute;
+    width: 1px;
+    z-index: 99;
+    left: 50%;
+}
+.card.add::before {
+    background: none;
+}
+.car.add::after {
+    background: none;
+}
+.card::before {
+    top: -20px;
+}
+.card::after {
+    bottom: -20px;
+}
+
+.card0 .site-name {
+    font-family: 'Germania One', cursive;
+}
+.card1 .site-name {
+    font-family: 'Baloo Chettan', cursive;
+}
+.card2 .site-name {
+    font-family: 'Pacifico', cursive;
+}
+.card3 .site-name {
+    font-family: 'Abril Fatface', cursive;
+}
+.card4 .site-name {
+    font-family: 'Righteous', cursive;
+}
+.card5 .site-name {
+    font-family: 'Permanent+Marker', cursive;
+}
+.card6 .site-name {
+    font-family: 'Oswald', sans-serif;
+}
+.card0, .card2, .card4, .card6 {
+    background-color: var(--primary1);
+} 
+
+.card1, .card3, .card5 {
+    background-color: var(--flash);
+}
+
+.card1 button.flash, .card3 button.flash, .card5 button.flash {
+    background-color: var(--primary1);
+}
+
+.card button {
     visibility: hidden;
 }
 
-.row:hover button, .row:hover .password {
+.card:hover button {
     visibility: initial;
 }
-.row:hover .password, .row .username {
-    cursor: text;
-}
-
-
-.row0 .site-name {
-    font-family: 'Germania One', cursive;
-}
-.row1 .site-name {
-    font-family: 'Baloo Chettan', cursive;
-}
-.row2 .site-name {
-    font-family: 'Pacifico', cursive;
-}
-.row3 .site-name {
-    font-family: 'Abril Fatface', cursive;
-}
-.row4 .site-name {
-    font-family: 'Righteous', cursive;
-}
-.row5 .site-name {
-    font-family: 'Permanent+Marker', cursive;
-}
-.row6 .site-name {
-    font-family: 'Oswald', sans-serif;
-}
-.row0, .row2, .row4, .row6 {
-    background-color: var(--primary1);
-} 
-.row0 a, .row2 a, .row4 a, .row6 a {
-    color: var(--flash);
-}
-
-.row1, .row3, .row5 {
-    background-color: var(--flash);
-}
-.row1 a, .row3 a, .row5 a {
-    color: var(--secondary);
-}
-.row1 button.flash, .row3 button.flash, .row5 button.flash {
-    background-color: var(--primary1);
-}
-
 
 .site-name {
-    margin-right: 5px;
-    margin-bottom: 4px;
     font-size: 3rem;
+    color: var(--primary2);
+    padding: 15px;
+}
+.username {
+    margin-bottom: 30px;
+}
+
+.password {
+    margin-top: 30px;
+}
+
+.password {
+    background-color: gray;
+    color: transparent  ;
+}
+
+.password, .username {
+    cursor: text;
+    font-size: 1.3rem;
 }
 
 .add i {
@@ -103,5 +135,5 @@ form[name="rowForm"] {
 }
 
 form[name="rowForm"] input {
-    color: white;
+    color: var(--primary2);
 }
