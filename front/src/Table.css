@@ -12,13 +12,14 @@
     margin-bottom: 60px;
     margin-left: 10px;
     margin-right: 10px;
+    --card-width: 262px;
 }
 
 .card {
     padding: 8px;
     color: var(--primary2);
     cursor: pointer;
-    min-width: 262px;
+    min-width: var(--card-width);
     min-height: 276px;
     opacity: 0.9;
 }
@@ -27,13 +28,18 @@
     opacity: 1;
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 500px) {
     .card {
         font-size: 0.8rem;
+        min-height: auto;
+        width: var(--card-width);
+    }
+    .card .site-name {
+        font-size: 2rem;
     }
 }
 
-@media only screen and (min-width: 401px) {
+@media only screen and (min-width: 501px) {
     .card {
         width: 10vw;
         height: 10vw;
@@ -96,11 +102,17 @@
 }
 
 .card button {
-    visibility: hidden;
+    transition: opacity .3s;
+    opacity: 0;
+}
+
+.card.editing button {
+    opacity: 1;
 }
 
 .card:hover button {
-    visibility: initial;
+    transition: opacity .3s;
+    opacity: 1;
 }
 
 .site-name {
@@ -114,16 +126,21 @@
 
 .password {
     margin-top: 30px;
+    transition: filter .5s;
+    filter: blur(4px);
 }
 
-.password {
-    background-color: gray;
-    color: transparent  ;
+.password:hover {
+    transition: filter .5s;
+    filter: blur(0);
 }
 
 .password, .username {
     cursor: text;
     font-size: 1.3rem;
+    height: 1.3rem;
+    max-width: var(--card-width);
+    overflow: hidden;
 }
 
 .add i {

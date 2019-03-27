@@ -34,8 +34,8 @@ export default class Row extends Component {
         let buttons = '';
         let error = '';
         let classNames = 'relative card card'+(this.props.index%7);
-        if (this.props.edit) {
-            classNames += ' big';
+        if (this.props.edit || this.props.account.error) {
+            classNames += ' editing';
         }
 
         if (this.props.edit || this.props.account.error) {
@@ -67,6 +67,7 @@ export default class Row extends Component {
             );
             classNames += ' flex-center';
         }
+
         return (
             <div className="cell">
                 <div className="col username">{this.props.account.username}</div>

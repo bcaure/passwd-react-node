@@ -139,9 +139,9 @@ class App extends Component {
               <div className="App-title flex wrap-reverse">
                 <input type="text" id="search-filter" name="searchFilter" placeholder="Search..." onKeyUp={event => this.handleFilterChanged(event.target.value)} />
                 <i className="secondary material-icons">person</i>
-                <span className="badge flash">{initiales}</span>
+                <span title={this.state.username} className="badge flash">{initiales}</span>
                 <i className="secondary material-icons">collections_bookmark</i>
-                <span className="badge round-badge flash">{this.state.accounts.length}</span>
+                <span title={this.state.accounts.length + ' comptes'} className="badge round-badge flash">{this.state.accounts.length}</span>
               </div>)
             }
           </div>

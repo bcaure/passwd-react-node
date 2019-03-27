@@ -13,11 +13,11 @@ export default class Table extends Component {
 
     handleRowEdit(index) {
         if (this.state.selected !== index) {
-            this.setState({ selected: index });
+            this.setState({ selected: index, newRow: null });
         }
     }
 
-    handleRowCancelEdit(index) {
+    handleRowCancelEdit(_index) {
         this.setState({ selected: null });
     }
 
@@ -27,20 +27,21 @@ export default class Table extends Component {
     }
 
     handleValidate(index, row) {
+        this.setState({ selected: null });
         this.props.onValidate(index, row);
     }
 
     handleNewRow() {
-        this.setState({newRow: {name: '', username: '', url: '', password: ''}, selected: null});
+        this.setState({ newRow: { name: '', username: '', url: '', password: '' }, selected: null });
     }
 
-    handleCreate(row) {  
+    handleCreate(row) {
         this.props.onCreate(row);
-        this.setState({newRow: null});
+        this.setState({ newRow: null });
     }
 
     cancelCreate() {
-        this.setState({newRow: null});
+        this.setState({ newRow: null });
     }
 
     render() {
@@ -61,7 +62,7 @@ export default class Table extends Component {
             lastRow = (
                 <Row account={this.state.newRow} index={this.props.accounts.length + 1}
                     edit={true} create={true}
-                    onEdit={() => {}}
+                    onEdit={() => { }}
                     onCancelEdit={(row) => this.handleRowCancelEdit(row)}
                     onDelete={() => this.cancelCreate()}
                     onValidate={(row) => this.handleCreate(row)}>
@@ -69,9 +70,13 @@ export default class Table extends Component {
             );
         } else {
             lastRow = (
-                <div className={'relative flex-center add card card' + (this.props.accounts.length % 2)}
-                     onClick={() => this.handleNewRow()}>
-                    <i className="material-icons">add</i>
+                <div className="cell">
+                    <div className="col username">&nbsp;</div>
+                    <div className={'relative flex-center add card card' + (this.props.accounts.length % 2)}
+                        onClick={() => this.handleNewRow()}>
+                        <i className="material-icons">add</i>
+                    </div>
+                    <div className="col password">&nbsp;</div>
                 </div>
             );
         }
