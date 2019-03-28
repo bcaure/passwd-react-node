@@ -1,0 +1,16 @@
+body {
+  margin: 0vh 2vw 5vh 2vw;
+}
+.page-header,
+.panel-primary > .panel-heading {
+  border-bottom: none;
+}
+#maintable {
+  table-layout: fixed;
+}
+#maintable > tbody > tr > td,
+#maintable > tbody > tr > td > span,
+#maintable > tbody > tr > td > a,
+#maintable > tbody > tr > td > div {
+  overflow: hidden;
+}

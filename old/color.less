@@ -1,0 +1,90 @@
+/*
+@color-primary-0: #3E9191;	
+@color-primary-1: #EFFBFB;
+@color-primary-2: #89CBCB;
+@color-primary-3: #187272;
+@color-primary-4: #003939;
+
+@color-secondary-1-0: #4F68A2;
+@color-secondary-1-1: #F1F4FC;
+@color-secondary-1-2: #96A9D4;
+@color-secondary-1-3: #25407F;
+@color-secondary-1-4: #06173F;
+
+@color-secondary-2-0: #53C253;
+@color-secondary-2-1: #F1FDF1;
+@color-secondary-2-2: #9AE59A;
+@color-secondary-2-3: #209820;
+@color-secondary-2-4: #004C00;
+*/
+
+@color-primary-0: #2C4870;	/* Main Primary color */
+@color-primary-1: #BCCCE4;
+@color-primary-2: #617A9F;
+@color-primary-3: #0B2141;
+@color-primary-4: #010812;
+
+@color-secondary-1-0: #AA9339;	/* Main Secondary color (1) */
+@color-secondary-1-1: #FFF5CE;
+@color-secondary-1-2: #F2DD8A;
+@color-secondary-1-3: #625009;
+@color-secondary-1-4: #1B1500;
+
+@color-secondary-2-0: #AA6539;	/* Main Secondary color (2) */
+@color-secondary-2-1: #FFE1CE;
+@color-secondary-2-2: #F2B38A;
+@color-secondary-2-3: #622D09;
+@color-secondary-2-4: #1B0B00;
+
+@light-neutral: #F7F7F7;
+@dark-neutral: #333333;
+// COLORS
+body {
+	background-color: @color-primary-0;
+}
+.panel-primary {
+	border-color: @color-primary-0;
+}
+.page-header, .panel-primary > .panel-heading {
+	color: @light-neutral;
+	background-color: @color-primary-3;
+}
+.label-primary, .btn.btn-primary {
+	background-color: @color-secondary-1-0;
+	color:@light-neutral;
+	border-color: @color-secondary-1-0;
+}
+.btn.btn-primary:hover {
+	background-color: @color-secondary-1-2;
+}
+.btn {
+	background-color: @color-secondary-2-3;
+	color: @light-neutral;
+}
+.btn:hover {
+	background-color: @color-secondary-2-0;
+}
+
+#maintable.table-striped > tbody > tr:nth-child(2n+1) > td {
+	background-color: @color-primary-1;
+	color: @dark-neutral;
+}
+
+#maintable.table-striped > tbody > tr:nth-child(2n+1) > td > a,
+#maintable.table-striped > tbody > tr:nth-child(2n+1) > td > a:hover,
+#maintable.table-striped > tbody > tr:nth-child(2n+1) > td > a:focus {
+	color: @color-secondary-1-3;
+}
+
+#maintable.table-striped > tbody > tr:nth-child(2n) > td {
+	background-color: @light-neutral;
+	color:  @dark-neutral;
+}
+
+a, a:hover, a:focus {
+	color: @color-primary-3!important;	
+}
+
+input.form-control {
+	background-color: @light-neutral;
+}

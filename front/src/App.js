@@ -5,7 +5,7 @@ import Login from './Login';
 import Table from './Table';
 import { manageError, processHttpStatus } from './lib/errors';
 
-const url = "http://localhost:3001";
+const url = process.env.REACT_APP_API_URL || "http://localhost:3001/api";
 const postRequest = {
   headers: {
     'content-type': 'application/json'  
