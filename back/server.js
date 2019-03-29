@@ -74,6 +74,11 @@ if (process.env.IP) {
 
 routes = (application) => {
 
+    application.get('/passwd/passwd.*', (_req, res) => {
+        res.set('location', '/');
+        res.status(301).send();
+    });
+
     /***** RESTFUL PASSWORD API*****/
     application.get('/api/password', (req, res) => {
         const currentUser = jwt.check(req.get('Authorization'));
