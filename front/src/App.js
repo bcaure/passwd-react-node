@@ -113,7 +113,7 @@ class App extends Component {
   handleFilterChanged(value) {
     this.setState({ globalError: null });
     if (value !== this.state.previousFilterValue) {
-      clearTimeout(this.filterInputTimeout);
+      clearTimeout(this.state.filterInputTimeout);
       const timer = setTimeout(() => {
         fetch(`${url}/password?search=${encodeURIComponent(value)}`, this.authHeader())
           .then(response => processHttpStatus(response))
