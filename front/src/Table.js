@@ -57,9 +57,9 @@ export default class Table extends Component {
             );
         });
 
-        let lastRow = undefined;
+        let addCardButton = undefined;
         if (this.state.newRow) {
-            lastRow = (
+            addCardButton = (
                 <Row account={this.state.newRow} index={this.props.accounts.length + 1}
                     edit={true} create={true}
                     onEdit={() => { }}
@@ -69,7 +69,7 @@ export default class Table extends Component {
                 </Row>
             );
         } else {
-            lastRow = (
+            addCardButton = (
                 <div className="cell">
                     <div className="col username">&nbsp;</div>
                     <div className={'relative flex-center add card card' + (this.props.accounts.length % 2)}
@@ -82,8 +82,8 @@ export default class Table extends Component {
         }
         return (
             <div className="table flex wrap">
+                {addCardButton}
                 {table}
-                {lastRow}
             </div>
         );
     }
