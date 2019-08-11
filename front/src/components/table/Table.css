@@ -46,7 +46,7 @@
     }
 }
 
-.card::before, .card::after {
+.existing-card::before, .existing-card::after {
     background: #616161 none repeat scroll 0 0;
     content: "";
     height: 40px;
@@ -54,12 +54,6 @@
     width: 1px;
     z-index: 99;
     left: 50%;
-}
-.card.add::before {
-    background: none;
-}
-.car.add::after {
-    background: none;
 }
 .card::before {
     top: -20px;

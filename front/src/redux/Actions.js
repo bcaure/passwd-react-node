@@ -11,7 +11,11 @@ import {
   UPDATE_ACCOUNT_SUCCESS,
   UPDATE_ACCOUNT_FAILURE,
   UPDATE_FILTER_VALUE,
-  UPDATE_FILTER_TIMEOUT
+  UPDATE_FILTER_TIMEOUT,
+  FORM_INIT,
+  FORM_CHANGE,
+  SELECT_ROW,
+  UPDATE_NEW_ROW
 } from './ActionTypes';
 import authHeader from '../lib/auth-headers';
 
@@ -55,6 +59,19 @@ export const submitLoginSuccess = (username, token) => ({
 export const submitLoginFailure = message => ({
   type: SUBMIT_LOGIN_FAILURE,
   payload: { message }
+});
+
+///
+/// LIST ACTIONS
+///
+export const selectRow = index => ({
+  type: SELECT_ROW,
+  payload: { index }
+});
+
+export const updateNewRow = account => ({
+  type: UPDATE_NEW_ROW,
+  payload: { account }
 });
 
 ///
@@ -171,6 +188,17 @@ export const deleteAccountFailure = message => ({
   payload: { message }
 });
 
+//
+// FORM ACTIONS
+//
+export const formChange = (name, value) => ({
+  type: FORM_CHANGE,
+  payload: { name, value }
+});
 
+export const formInit = account => ({
+  type: FORM_INIT,
+  payload: { account }
+});
 
 
