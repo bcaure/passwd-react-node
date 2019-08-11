@@ -24,7 +24,8 @@ class Data {
 
     find(currentUser, searchTerm) {
         const sql = `${selectQuery}
-        WHERE user = ? ${ searchTerm ? 'AND (lower(libelle) like ? OR lower(url) like ?)' : ''}`;
+        WHERE user = ? ${ searchTerm ? 'AND (lower(libelle) like ? OR lower(url) like ?)' : ''}
+        LIMIT 30`;
 
         let params = [currentUser];
         if (searchTerm) {
