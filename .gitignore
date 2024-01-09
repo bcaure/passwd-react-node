@@ -24,3 +24,6 @@
 /back/npm-debug.log*
 /back/yarn-debug.log*
 /back/yarn-error.log*
+
+
+.env

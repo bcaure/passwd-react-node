@@ -1,10 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const cors = require('cors')
-const config = require('./config');
+const cors = require('cors');
 const mysql = require('mysql');
-let con = mysql.createConnection(config.datasource);
+const datasource = {
+    host: process.env.DATASOURCE_HOST,
+    user: process.env.DATASOURCE_USER,
+    password: process.env.DATASOURCE_PASSWORD,
+    database: process.env.DATASOURCE_DATABASE
+};
+let con = mysql.createConnection(datasource);
 const Data = require('./data');
 const Jwt = require('./jwt');
 const jwt = new Jwt();
@@ -17,7 +22,7 @@ con.connect((err) => {
         const message = 'Impossible de se connecter à la base de données';
         console.error(message);
         app.get('/api/*', (_req, res) => {
-            con = mysql.createConnection(config.datasource);
+            con = mysql.createConnection(datasource);
             con.connect((err) => {
                 if (err) {
                     res.status(500).json({ message });
@@ -28,7 +33,7 @@ con.connect((err) => {
                 }
             });
         }).post('/api/*', (_req, res) => {
-            con = mysql.createConnection(config.datasource);
+            con = mysql.createConnection(datasource);
             con.connect((err) => {
                 if (err) {
                     res.status(500).json({ message });

@@ -1,6 +1,5 @@
 
 const jsonwebtoken = require('jsonwebtoken');
-const config = require('./config');
 
 class Jwt {
     check(token) {
@@ -13,7 +12,7 @@ class Jwt {
     }
 
     generate(username) {
-        return jsonwebtoken.sign({ id: username }, config.secret, { expiresIn: 3600 });// expires in 1 hour
+        return jsonwebtoken.sign({ id: username }, process.env.SECRET, { expiresIn: 3600 });// expires in 1 hour
     }
 }
 module.exports = Jwt;
