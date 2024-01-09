@@ -4,7 +4,7 @@ const jsonwebtoken = require('jsonwebtoken');
 class Jwt {
     check(token) {
         try {
-            const decoded = jsonwebtoken.verify(token, config.secret);
+            const decoded = jsonwebtoken.verify(token, process.env.SECRET);
             return decoded.id;
         } catch (err) {
             return null;
