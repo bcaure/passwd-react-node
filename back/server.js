@@ -17,6 +17,8 @@ const jwt = new Jwt();
 app.use(bodyParser.json());
 app.use(cors());
 
+app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+
 con.connect((err) => {
     if (err) {
         const message = 'Impossible de se connecter à la base de données';

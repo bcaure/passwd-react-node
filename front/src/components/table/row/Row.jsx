@@ -38,42 +38,42 @@ class Row extends Component {
     if (this.props.form && (this.props.edit || this.props.account.error)) {
       fields = (
         <form name="rowForm" className="left wrap">
-          <input type="text" required placeholder="nom du site" name="name" value={this.props.form.name} onChange={(event) => this.props.formChange(event.target.name, event.target.value)} />
-          <input type="text" required placeholder="url" name="url" value={this.props.form.url} onChange={(event) => this.props.formChange(event.target.name, event.target.value)} />
-          <input type="text" required placeholder="nom d'utilisateur" name="username" value={this.props.form.username} onChange={(event) => this.props.formChange(event.target.name, event.target.value)} />
-          <input type="text" required placeholder="mot de passe" name="password" value={this.props.form.password} onChange={(event) => this.props.formChange(event.target.name, event.target.value)} />
+          <input type="text" required placeholder="nom du site" name="name" data-testid="row-name" value={this.props.form.name} onChange={(event) => this.props.formChange(event.target.name, event.target.value)} />
+          <input type="text" required placeholder="url" name="url" data-testid="row-url" value={this.props.form.url} onChange={(event) => this.props.formChange(event.target.name, event.target.value)} />
+          <input type="text" required placeholder="nom d'utilisateur" name="username" data-testid="row-username" value={this.props.form.username} onChange={(event) => this.props.formChange(event.target.name, event.target.value)} />
+          <input type="text" required placeholder="mot de passe" name="password" data-testid="row-password" value={this.props.form.password} onChange={(event) => this.props.formChange(event.target.name, event.target.value)} />
         </form>
       );
       buttons = (
         <div className="absolute bottom-right flex-center">
-          <div className={'danger'}>{this.props.account.error}</div>
-          <button className="round info" onClick={(event) => this.cancelEdit(event)}><i className="material-icons">clear</i></button>
-          <button className="round flash" onClick={(_event) => this.props.onValidate({ ...this.props.form })}><i className="material-icons">done</i></button>
+          <div className={'danger'} data-testid="row-error">{this.props.account.error}</div>
+          <button type="button" className="round info" data-testid="row-cancel" onClick={(event) => this.cancelEdit(event)}><i className="material-icons">clear</i></button>
+          <button type="button" className="round flash" data-testid="row-validate" onClick={(_event) => this.props.onValidate({ ...this.props.form })}><i className="material-icons">done</i></button>
         </div>
       );
 
     } else {
       buttons = (
         <div className="absolute bottom-right">
-          <button className="round danger" onClick={(_event) => this.props.onDelete()}><i className="material-icons">delete</i></button>
-          <button className="round flash" onClick={(_event) => this.edit()}><i className="material-icons">edit</i></button>
+          <button type="button" className="round danger" data-testid="row-delete" onClick={(_event) => this.props.onDelete()}><i className="material-icons">delete</i></button>
+          <button type="button" className="round flash" data-testid="row-edit" onClick={(_event) => this.edit()}><i className="material-icons">edit</i></button>
         </div>
       );
       fields = (
-        <div className="site-name" onClick={() => window.open(this.props.account.url)}>{this.props.account.name}</div>
+        <div className="site-name" data-testid="row-site-name" onClick={() => window.open(this.props.account.url)}>{this.props.account.name}</div>
       );
       classNames += ' flex-center';
     }
 
     return (
-      <div className="cell">
-        <div className="col username">{this.props.account.username}</div>
+      <div className="cell" data-testid="account-row" data-account-name={this.props.account.name}>
+        <div className="col username" data-testid="row-col-username">{this.props.account.username}</div>
         <div className={classNames}>
           {fields}
           {error}
           {buttons}
         </div>
-        <div className="col password">{this.props.account.password}</div>
+        <div className="col password" data-testid="row-col-password">{this.props.account.password}</div>
       </div>
     );
   }

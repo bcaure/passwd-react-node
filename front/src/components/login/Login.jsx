@@ -26,15 +26,15 @@ export default class Login extends Component {
     return (
       <form id="login-form" className="flex-center flex-xs" onSubmit={e => this.handleSubmit(e)}>
 
-        <input type="text" required placeholder="nom" name="username" value={this.state.username}
+        <input type="text" required placeholder="nom" name="username" data-testid="login-username" value={this.state.username}
           onChange={e => this.handleChange(e)}
           onKeyDown={e => { if (e.key === 'Enter') { this.props.onSubmit(this.state.username, this.state.password); } }} />
 
-        <input type="password" required placeholder="mot de passe" name="password" value={this.state.password}
+        <input type="password" required placeholder="mot de passe" name="password" data-testid="login-password" value={this.state.password}
           onChange={e => this.handleChange(e)}
           onKeyDown={e => { if (e.key === 'Enter') { this.props.onSubmit(this.state.username, this.state.password); } }} />
 
-        <button type="submit" className="round flash">
+        <button type="submit" className="round flash" data-testid="login-submit">
           <i className="material-icons">done</i>
         </button>
 

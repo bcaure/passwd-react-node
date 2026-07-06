@@ -19,17 +19,17 @@ export const App = props => {
             props.token &&
             (
               <div className="App-title flex wrap-reverse">
-                <input type="text" id="search-filter" name="searchFilter" placeholder="Search..." onKeyUp={event => props.searchAccounts(event.target.value)} />
+                <input type="text" id="search-filter" name="searchFilter" data-testid="search-filter" placeholder="Search..." onKeyUp={event => props.searchAccounts(event.target.value)} />
                 <i className="secondary material-icons">person</i>
-                <span title={props.username} className="badge flash">{initiales}</span>
+                <span title={props.username} data-testid="user-initials" className="badge flash">{initiales}</span>
                 <i className="secondary material-icons">collections_bookmark</i>
-                <span title={props.accounts.length + ' comptes'} className="badge round-badge flash">{props.accounts.length}</span>
+                <span title={props.accounts.length + ' comptes'} data-testid="account-count" className="badge round-badge flash">{props.accounts.length}</span>
               </div>)
           }
         </div>
       </header>
       <div className="App-body flex-column flex-center margin-small">
-        <div className={messageClasses}>&nbsp;{props.message}</div>
+        <div className={messageClasses} data-testid="app-message">&nbsp;{props.message}</div>
         {
           !props.token &&
           (<Login onSubmit={(username, password) => props.submitLogin(username, password)}></Login>)
