@@ -9,6 +9,11 @@
     "verify:db": "bash scripts/setup-test-db.sh",
     "verify:api": "node scripts/api-integration.test.mjs",
     "test:front": "npm --prefix front test",
-    "test:build": "npm --prefix front run build"
+    "test:build": "npm --prefix front run build",
+    "test:e2e": "playwright test",
+    "test:e2e:report": "playwright show-report e2e/playwright-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
   }
 }

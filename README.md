@@ -96,6 +96,36 @@ npm run test:front   # frontend unit tests
 npm run test:build   # frontend production build
 ```
 
+## End-to-end (GUI) tests with Playwright
+
+The `e2e/` suite drives the real UI in a headless browser and covers the main
+user flows: login (success and failure), account listing, search, and
+create/edit/delete with server-side persistence checks.
+
+Install the browser once (already available in the Cursor cloud agent
+environment), then run the suite:
+
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
+
+Playwright automatically:
+
+1. resets and seeds the MariaDB 10.11 test database (`scripts/reset-test-db.sh`),
+2. starts the backend (`back/`) and the Vite dev server (`front/`),
+3. runs the specs in `e2e/tests/`.
+
+Useful options:
+
+```bash
+npm run test:e2e -- e2e/tests/crud.spec.js   # run a single spec
+PW_VIDEO=on PW_SLOWMO=350 npm run test:e2e    # record videos in slow motion
+npm run test:e2e:report                       # open the HTML report
+```
+
+The test user is `ben` / `testpass123` (seeded by the reset script).
+
 
 - Frontend migrated from Create React App (React 16) to **Vite + React 19**
 - Backend uses **mysql2** instead of the deprecated `mysql` package for MariaDB 10.11 compatibility
