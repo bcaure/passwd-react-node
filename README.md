@@ -77,7 +77,25 @@ VITE_API_URL=/api npm run build
 
 Copy `front/dist/` to your static web root (for example `www/passwd`).
 
-## Upgrade notes
+## Automated verification
+
+Run the full end-to-end check (MariaDB setup, frontend tests/build, API integration, frontend preview):
+
+```bash
+npm run verify
+```
+
+This uses the locally installed MariaDB 10.11 server in the cloud agent environment. Docker is optional for local machines that prefer containers.
+
+Individual steps:
+
+```bash
+npm run verify:db    # reset and seed the test database
+npm run verify:api   # API tests only (backend must already be running)
+npm run test:front   # frontend unit tests
+npm run test:build   # frontend production build
+```
+
 
 - Frontend migrated from Create React App (React 16) to **Vite + React 19**
 - Backend uses **mysql2** instead of the deprecated `mysql` package for MariaDB 10.11 compatibility
