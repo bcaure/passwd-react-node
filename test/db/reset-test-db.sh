@@ -19,8 +19,8 @@ FLUSH PRIVILEGES;
 SQL
 
 # Ensure schema exists, then wipe all data for a clean slate.
-sudo mariadb passwd < "${ROOT_DIR}/db/init-mariadb-10.11.sql" >/dev/null
-mysql -u passwd -ppasswd -h 127.0.0.1 passwd <<'SQL'
+sudo mariadb passwd < "${ROOT_DIR}/db/init-mariadb-11.8.sql" >/dev/null
+mariadb -u passwd -ppasswd -h 127.0.0.1 passwd <<'SQL'
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE compte;
 TRUNCATE TABLE site;
@@ -29,9 +29,9 @@ SET FOREIGN_KEY_CHECKS = 1;
 SQL
 
 # Reseed fresh data into the now-empty tables.
-sudo mariadb passwd < "${ROOT_DIR}/db/init-mariadb-10.11.sql" >/dev/null
+sudo mariadb passwd < "${ROOT_DIR}/db/init-mariadb-11.8.sql" >/dev/null
 
 # Set a known bcrypt password for the "ben" test user and reset its quota.
 HASH="$(node -e "process.stdout.write(require('${ROOT_DIR}/back/node_modules/bcryptjs').hashSync('${TEST_PASSWORD}', 10))")"
-mysql -u passwd -ppasswd -h 127.0.0.1 passwd -e \
+mariadb -u passwd -ppasswd -h 127.0.0.1 passwd -e \
   "UPDATE user SET password='${HASH}', used_quota=0 WHERE login='ben';"

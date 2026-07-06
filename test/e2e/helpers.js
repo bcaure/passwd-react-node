@@ -9,7 +9,7 @@ const CREDENTIALS = {
   password: 'testpass123'
 };
 
-// Number of accounts seeded for the "ben" user (see db/init-mariadb-10.11.sql).
+// Number of accounts seeded for the "ben" user (see db/init-mariadb-11.8.sql).
 const SEEDED_ACCOUNT_COUNT = 8;
 
 function resetDatabase() {

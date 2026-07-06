@@ -17,11 +17,11 @@ GRANT ALL PRIVILEGES ON passwd.* TO 'passwd'@'127.0.0.1';
 FLUSH PRIVILEGES;
 SQL
 
-sudo mariadb passwd < "${ROOT_DIR}/db/init-mariadb-10.11.sql"
+sudo mariadb passwd < "${ROOT_DIR}/db/init-mariadb-11.8.sql"
 
 echo "Setting known test credentials for user ben..."
 HASH="$(node -e "process.stdout.write(require('${ROOT_DIR}/back/node_modules/bcryptjs').hashSync('${TEST_PASSWORD}', 10))")"
-mysql -u passwd -ppasswd -h 127.0.0.1 passwd -e \
+mariadb -u passwd -ppasswd -h 127.0.0.1 passwd -e \
   "UPDATE user SET password='${HASH}', used_quota=0 WHERE login='ben';"
 
 echo "Database ready."

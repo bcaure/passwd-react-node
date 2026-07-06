@@ -1,4 +1,4 @@
--- MariaDB 10.11 schema for local development
+-- MariaDB 11.8 schema for local development
 -- Compatible with the passwd Node.js backend
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
