@@ -9,6 +9,7 @@
 
 # production
 /front/build
+/front/dist
 
 # misc
 /front/.DS_Store

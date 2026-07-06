@@ -4,7 +4,7 @@
 --
 -- Host: mysql-cgicertif.alwaysdata.net
 -- Generation Time: Jul 29, 2019 at 10:27 PM
--- Server version: 10.1.31-MariaDB
+-- Server version: 10.11-MariaDB
 -- PHP Version: 7.2.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";

@@ -28,11 +28,11 @@ export default class Login extends Component {
 
         <input type="text" required placeholder="nom" name="username" value={this.state.username}
           onChange={e => this.handleChange(e)}
-          onKeyPress={e => { if (e.which === 13) { this.props.onSubmit(this.state.username, this.state.password); return false; } }} />
+          onKeyDown={e => { if (e.key === 'Enter') { this.props.onSubmit(this.state.username, this.state.password); } }} />
 
         <input type="password" required placeholder="mot de passe" name="password" value={this.state.password}
           onChange={e => this.handleChange(e)}
-          onKeyPress={e => { if (e.which === 13) { this.props.onSubmit(this.state.username, this.state.password); return false; } }} />
+          onKeyDown={e => { if (e.key === 'Enter') { this.props.onSubmit(this.state.username, this.state.password); } }} />
 
         <button type="submit" className="round flash">
           <i className="material-icons">done</i>
