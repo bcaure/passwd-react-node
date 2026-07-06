@@ -4,8 +4,8 @@ const BACKEND_PORT = process.env.BACKEND_PORT || '3001';
 const FRONTEND_PORT = process.env.FRONTEND_PORT || '3000';
 
 module.exports = defineConfig({
-  testDir: './e2e/tests',
-  outputDir: './e2e/test-results',
+  testDir: './test/e2e',
+  outputDir: './test/e2e/test-results',
   fullyParallel: false,
   workers: 1,
   forbidOnly: !!process.env.CI,
@@ -14,7 +14,7 @@ module.exports = defineConfig({
   expect: { timeout: 15_000 },
   reporter: [
     ['list'],
-    ['html', { outputFolder: 'e2e/playwright-report', open: 'never' }]
+    ['html', { outputFolder: 'test/e2e/playwright-report', open: 'never' }]
   ],
   use: {
     baseURL: `http://localhost:${FRONTEND_PORT}`,
@@ -33,7 +33,7 @@ module.exports = defineConfig({
   ],
   webServer: [
     {
-      command: 'bash scripts/reset-test-db.sh && node --env-file=back/.env.test back/server.js',
+      command: 'bash test/db/reset-test-db.sh && node --env-file=back/.env.test back/server.js',
       url: `http://localhost:${BACKEND_PORT}/health`,
       reuseExistingServer: !process.env.CI,
       timeout: 120_000,

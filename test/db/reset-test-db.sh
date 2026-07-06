@@ -4,7 +4,7 @@
 # for the "ben" test user. Safe to run repeatedly (used by the E2E suite).
 set -euo pipefail
 
-ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 TEST_PASSWORD="${TEST_PASSWORD:-testpass123}"
 
 sudo service mariadb start >/dev/null 2>&1 || true

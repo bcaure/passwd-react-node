@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { CREDENTIALS, SEEDED_ACCOUNT_COUNT, resetDatabase, login } = require('../helpers');
+const { CREDENTIALS, SEEDED_ACCOUNT_COUNT, resetDatabase, login } = require('./helpers');
 
 test.describe('Authentication', () => {
   test.beforeEach(() => {

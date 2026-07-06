@@ -4,7 +4,7 @@ const {
   resetDatabase,
   loginAndWaitForAccounts,
   accountRow
-} = require('../helpers');
+} = require('./helpers');
 
 test.describe('Account CRUD operations', () => {
   test.beforeEach(async ({ page }) => {

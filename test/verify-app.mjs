@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { setTimeout as delay } from 'node:timers/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { runApiIntegrationTests } from './api-integration.test.mjs';
+import { runApiIntegrationTests } from './api/api-integration.test.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -75,7 +75,7 @@ async function main() {
   console.log('=== Passwd app verification ===');
 
   console.log('\n[1/4] Setting up MariaDB test database...');
-  runSync('bash', [path.join(ROOT, 'scripts/setup-test-db.sh')]);
+  runSync('bash', [path.join(ROOT, 'test/db/setup-test-db.sh')]);
 
   console.log('\n[2/4] Running frontend unit tests and build...');
   runSync('npm', ['test'], { cwd: path.join(ROOT, 'front') });

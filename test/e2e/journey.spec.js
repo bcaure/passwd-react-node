@@ -6,7 +6,7 @@ const {
   login,
   loginAndWaitForAccounts,
   accountRow
-} = require('../helpers');
+} = require('./helpers');
 
 // End-to-end smoke test covering the full user journey in a single flow.
 // Also serves as the source for the demo recording.

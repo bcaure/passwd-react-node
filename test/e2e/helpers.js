@@ -2,7 +2,7 @@ const { execFileSync } = require('node:child_process');
 const path = require('node:path');
 const { expect } = require('@playwright/test');
 
-const ROOT = path.join(__dirname, '..');
+const ROOT = path.join(__dirname, '../..');
 
 const CREDENTIALS = {
   username: 'ben',
@@ -13,7 +13,7 @@ const CREDENTIALS = {
 const SEEDED_ACCOUNT_COUNT = 8;
 
 function resetDatabase() {
-  execFileSync('bash', [path.join(ROOT, 'scripts/reset-test-db.sh')], {
+  execFileSync('bash', [path.join(ROOT, 'test/db/reset-test-db.sh')], {
     stdio: 'pipe',
     env: { ...process.env, TEST_PASSWORD: CREDENTIALS.password }
   });

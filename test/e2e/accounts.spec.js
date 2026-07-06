@@ -1,5 +1,5 @@
 const { test, expect } = require('@playwright/test');
-const { SEEDED_ACCOUNT_COUNT, resetDatabase, loginAndWaitForAccounts, accountRow } = require('../helpers');
+const { SEEDED_ACCOUNT_COUNT, resetDatabase, loginAndWaitForAccounts, accountRow } = require('./helpers');
 
 test.describe('Account listing and search', () => {
   test.beforeEach(async ({ page }) => {

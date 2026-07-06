@@ -5,13 +5,13 @@
     "node": ">=24"
   },
   "scripts": {
-    "verify": "node scripts/verify-app.mjs",
-    "verify:db": "bash scripts/setup-test-db.sh",
-    "verify:api": "node scripts/api-integration.test.mjs",
+    "verify": "node test/verify-app.mjs",
+    "verify:db": "bash test/db/setup-test-db.sh",
+    "verify:api": "node test/api/api-integration.test.mjs",
     "test:front": "npm --prefix front test",
     "test:build": "npm --prefix front run build",
     "test:e2e": "playwright test",
-    "test:e2e:report": "playwright show-report e2e/playwright-report"
+    "test:e2e:report": "playwright show-report test/e2e/playwright-report"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1"
