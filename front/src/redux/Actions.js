@@ -19,7 +19,7 @@ import {
 } from './ActionTypes';
 import authHeader from '../lib/auth-headers';
 
-const url = process.env.REACT_APP_API_URL || "http://localhost:3001/api";
+const url = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 const postRequest = {
   headers: {
     'content-type': 'application/json'  

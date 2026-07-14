@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 const datasource = {
     host: process.env.DATASOURCE_HOST,
     user: process.env.DATASOURCE_USER,
@@ -17,11 +17,13 @@ const jwt = new Jwt();
 app.use(bodyParser.json());
 app.use(cors());
 
+app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+
 con.connect((err) => {
     if (err) {
         const message = 'Impossible de se connecter à la base de données';
         console.error(message);
-        app.get('/api/*', (_req, res) => {
+        app.get('/api/{*path}', (_req, res) => {
             con = mysql.createConnection(datasource);
             con.connect((err) => {
                 if (err) {
@@ -32,7 +34,7 @@ con.connect((err) => {
                     routes(app);
                 }
             });
-        }).post('/api/*', (_req, res) => {
+        }).post('/api/{*path}', (_req, res) => {
             con = mysql.createConnection(datasource);
             con.connect((err) => {
                 if (err) {
@@ -79,7 +81,7 @@ if (process.env.IP) {
 
 routes = (application) => {
 
-    application.get('/passwd/passwd.*', (_req, res) => {
+    application.get(/^\/passwd\/passwd.*/, (_req, res) => {
         res.set('location', '/');
         res.status(301).send();
     });

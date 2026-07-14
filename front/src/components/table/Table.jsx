@@ -63,6 +63,7 @@ class Table extends Component {
         <div className="cell">
           <div className="col username">&nbsp;</div>
           <div className={'relative flex-center add card card' + (this.props.accounts.length % 2)}
+            data-testid="add-account"
             onClick={() => this.handleNewRow()}>
             <i className="material-icons">add</i>
           </div>
@@ -71,7 +72,7 @@ class Table extends Component {
       );
     }
     return (
-      <div className="table flex wrap">
+      <div className="table flex wrap" data-testid="accounts-table">
         {addCardButton}
         {table}
       </div>

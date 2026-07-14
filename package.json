@@ -1,0 +1,19 @@
+{
+  "name": "passwd-app",
+  "private": true,
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "verify": "node test/verify-app.mjs",
+    "verify:db": "bash test/db/setup-test-db.sh",
+    "verify:api": "node test/api/api-integration.test.mjs",
+    "test:front": "npm --prefix front test",
+    "test:build": "npm --prefix front run build",
+    "test:e2e": "playwright test",
+    "test:e2e:report": "playwright show-report test/e2e/playwright-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
+}

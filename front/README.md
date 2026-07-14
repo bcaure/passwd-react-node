@@ -1,21 +1,16 @@
-# Passwords React/NodeJS app
+# Passwords React frontend
 
-## Local development
+See the [project README](../README.md) for setup, environment variables, and deployment.
 
-### Back
+## Quick start
+
+```bash
 npm install
 npm start
+```
 
-### Front
-npm install
-npm run start
+Build for production:
 
-## Deploy instructions
-
-### Back
-- copy back to passwd/back
-
-### Front
-- from windows CMD: 
-```set "REACT_APP_API_URL=/api" && npm run build```
-- copy front/build to www/passwd
+```bash
+VITE_API_URL=/api npm run build
+```
