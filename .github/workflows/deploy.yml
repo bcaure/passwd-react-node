@@ -41,25 +41,37 @@ jobs:
         working-directory: front
 
       - name: Configure SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.ALWAYSDATA_SSH_PRIVATE_KEY }}
         run: |
           mkdir -p ~/.ssh
-          printf '%s\n' "${{ secrets.ALWAYSDATA_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 700 ~/.ssh
+          printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          echo 'RSYNC_RSH=ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes -o PasswordAuthentication=no' >> "$GITHUB_ENV"
+
+      - name: Verify SSH connection
+        run: |
+          ssh -i ~/.ssh/deploy_key \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            -o PasswordAuthentication=no \
+            "${{ secrets.ALWAYSDATA_SSH_USER }}@${SSH_HOST}" \
+            "echo SSH connection OK"
 
       - name: Deploy backend
         run: |
           rsync -avz --delete \
             --exclude '.env' \
             --exclude '.htaccess' \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
             back/ \
             "${{ secrets.ALWAYSDATA_SSH_USER }}@${SSH_HOST}:${BACKEND_REMOTE_PATH}/"
 
       - name: Deploy frontend
         run: |
           rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
             front/dist/ \
             "${{ secrets.ALWAYSDATA_SSH_USER }}@${SSH_HOST}:${FRONTEND_REMOTE_PATH}/"
 
