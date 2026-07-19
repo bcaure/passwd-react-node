@@ -94,7 +94,7 @@ The production `.htaccess` for the static site lives in `front/public/.htaccess`
 
 ### Automated deploy (GitHub Actions)
 
-Pushing to `master` runs **CI** (unit tests, build, API tests, Playwright E2E), then **Deploy** (rsync over SSH + AlwaysData site restart).
+Pushing to `master` runs the **Deploy** workflow (build, rsync over SSH, AlwaysData site restart).
 
 #### GitHub secrets
 
