@@ -1,0 +1,19 @@
+# AlwaysData Apache — static site at www/passwd
+#
+# SPA routing: serve index.html for client-side routes (React Router paths).
+# API proxy: uncomment and set NODE_INTERNAL_PORT to the port shown in
+# AlwaysData → Web → Sites → your Node.js site → Environment.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # --- API proxy (uncomment and set your Node.js internal port) ---
+  # RewriteRule ^api/(.*)$ http://127.0.0.1:NODE_INTERNAL_PORT/api/$1 [P,L]
+
+  # SPA fallback
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>

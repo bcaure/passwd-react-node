@@ -1,0 +1,84 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [master]
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    env:
+      SSH_HOST: ssh-cgicertif.alwaysdata.net
+      BACKEND_REMOTE_PATH: /home/cgicertif/passwd/back
+      FRONTEND_REMOTE_PATH: /home/cgicertif/www/passwd
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            back/package-lock.json
+            front/package-lock.json
+
+      - name: Install backend dependencies
+        run: npm ci --omit=dev
+        working-directory: back
+
+      - name: Build frontend
+        run: |
+          npm ci
+          VITE_API_URL=/api npm run build
+        working-directory: front
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.ALWAYSDATA_SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "$SSH_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy backend
+        run: |
+          rsync -avz --delete \
+            --exclude '.env' \
+            --exclude '.htaccess' \
+            --exclude '.env.test' \
+            --exclude '.env.example' \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
+            back/ \
+            "${{ secrets.ALWAYSDATA_SSH_USER }}@${SSH_HOST}:${BACKEND_REMOTE_PATH}/"
+
+      - name: Deploy frontend
+        run: |
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
+            front/dist/ \
+            "${{ secrets.ALWAYSDATA_SSH_USER }}@${SSH_HOST}:${FRONTEND_REMOTE_PATH}/"
+
+      - name: Restart Node.js site
+        run: |
+          status="$(curl --silent --show-error --write-out '%{http_code}' --output /dev/null \
+            --request POST \
+            --user "${{ secrets.ALWAYSDATA_API_KEY }} account=${{ secrets.ALWAYSDATA_ACCOUNT }}:${{ secrets.ALWAYSDATA_API_PASSWORD }}" \
+            --data '' \
+            "https://api.alwaysdata.com/v1/site/${{ secrets.ALWAYSDATA_BACKEND_SITE_ID }}/restart/")"
+          if [ "$status" != "204" ]; then
+            echo "Site restart failed with HTTP $status"
+            exit 1
+          fi
+          echo "Site restarted successfully."
