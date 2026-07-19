@@ -71,13 +71,15 @@ The app runs on port `3000` and proxies `/api` requests to the backend.
 
 ## Deploy instructions
 
-### Backend
+### Manual deploy
+
+#### Backend
 
 - Copy `back/` to your server
 - Configure `.env` for your MariaDB 11.8 instance
 - Run with Node.js 24: `npm start`
 
-### Frontend
+#### Frontend
 
 Build with the production API URL:
 
@@ -87,6 +89,32 @@ VITE_API_URL=/api npm run build
 ```
 
 Copy `front/dist/` to your static web root (for example `www/passwd`).
+
+The production `.htaccess` for the static site lives in `front/public/.htaccess` (copied into `dist/` on build). Uncomment the API proxy rule and set your Node.js internal port from AlwaysData → Web → Sites → Environment.
+
+### Automated deploy (GitHub Actions)
+
+Pushing to `master` runs the **Deploy** workflow (build, rsync over SSH, AlwaysData site restart).
+
+#### GitHub secrets
+
+| Secret | Description |
+|--------|-------------|
+| `ALWAYSDATA_SSH_PRIVATE_KEY` | SSH private key (public key added in AlwaysData → Remote access → SSH keys) |
+| `ALWAYSDATA_SSH_USER` | SSH account name (e.g. `cgicertif`) |
+| `ALWAYSDATA_API_KEY` | API key from AlwaysData profile |
+| `ALWAYSDATA_ACCOUNT` | AlwaysData account name |
+| `ALWAYSDATA_API_PASSWORD` | Account password (used for API basic auth) |
+| `ALWAYSDATA_BACKEND_SITE_ID` | Numeric site ID of the Node.js backend (Web → Sites) |
+
+#### Remote paths
+
+| Component | Path on server |
+|-----------|----------------|
+| Backend | `/home/cgicertif/passwd/back` |
+| Frontend | `/home/cgicertif/www/passwd` |
+
+The deploy workflow preserves the server-side `back/.env` and `back/.htaccess` (excluded from rsync).
 
 ## Automated verification
 
