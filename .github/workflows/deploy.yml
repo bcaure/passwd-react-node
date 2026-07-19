@@ -52,8 +52,6 @@ jobs:
           rsync -avz --delete \
             --exclude '.env' \
             --exclude '.htaccess' \
-            --exclude '.env.test' \
-            --exclude '.env.example' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=yes" \
             back/ \
             "${{ secrets.ALWAYSDATA_SSH_USER }}@${SSH_HOST}:${BACKEND_REMOTE_PATH}/"
