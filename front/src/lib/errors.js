@@ -5,7 +5,10 @@ export function processHttpStatus(response) {
     }
     return response.json();
 }
-export function manageError(error) {
+export function manageError(error, { logoutOnUnauthorized = false } = {}) {
+    if (logoutOnUnauthorized && error.status === 401) {
+        return Promise.resolve({ unauthorized: true });
+    }
     if (error.json) {
         return error.json().then(json => processPromiseError(json));
     } else {

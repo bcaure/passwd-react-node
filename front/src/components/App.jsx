@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { submitLogin, createAccount, readAccounts, updateAccount, deleteAccount, searchAccounts } from '../redux/Actions';
 import logo from '../logo.png';
 import './App.css';
@@ -30,20 +31,30 @@ export const App = props => {
       </header>
       <div className="App-body flex-column flex-center margin-small">
         <div className={messageClasses} data-testid="app-message">&nbsp;{props.message}</div>
-        {
-          !props.token &&
-          (<Login onSubmit={(username, password) => props.submitLogin(username, password)}></Login>)
-        }
-        {
-          props.token &&
-          (
-            <Table accounts={props.accounts}
-              onDelete={(index) => props.deleteAccount(index)}
-              onValidate={(index, account) => props.updateAccount(index, account)}
-              onCreate={(account) => props.createAccount(account)}>
-            </Table>
-          )
-        }
+        <Routes>
+          <Route
+            path="/login"
+            element={
+              props.token
+                ? <Navigate to="/" replace />
+                : <Login onSubmit={(username, password) => props.submitLogin(username, password)} />
+            }
+          />
+          <Route
+            path="/"
+            element={
+              props.token
+                ? (
+                  <Table accounts={props.accounts}
+                    onDelete={(index) => props.deleteAccount(index)}
+                    onValidate={(index, account) => props.updateAccount(index, account)}
+                    onCreate={(account) => props.createAccount(account)}>
+                  </Table>
+                )
+                : <Navigate to="/login" replace />
+            }
+          />
+        </Routes>
       </div>
     </div>
   );
