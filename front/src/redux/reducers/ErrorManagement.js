@@ -1,6 +1,7 @@
 import {
   SUBMIT_LOGIN_SUCCESS,
   SUBMIT_LOGIN_FAILURE,
+  LOGOUT,
   READ_ACCOUNTS_SUCCESS,
   READ_ACCOUNTS_FAILURE,
   DELETE_ACCOUNT_SUCCESS,
@@ -24,6 +25,7 @@ export default function (state = initialState, action) {
     case CREATE_ACCOUNT_FAILURE:
     case UPDATE_ACCOUNT_FAILURE:
       return { message: action.payload.message };
+    case LOGOUT:
     case SUBMIT_LOGIN_SUCCESS:
     case READ_ACCOUNTS_SUCCESS:
     case DELETE_ACCOUNT_SUCCESS:

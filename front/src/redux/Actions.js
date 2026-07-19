@@ -1,7 +1,8 @@
 import { manageError, processHttpStatus } from '../lib/errors';
 import { 
   SUBMIT_LOGIN_SUCCESS, 
-  SUBMIT_LOGIN_FAILURE, 
+  SUBMIT_LOGIN_FAILURE,
+  LOGOUT,
   READ_ACCOUNTS_SUCCESS, 
   READ_ACCOUNTS_FAILURE, 
   DELETE_ACCOUNT_SUCCESS,
@@ -39,6 +40,18 @@ const deleteRequest = {
   method: 'DELETE'
 };
 
+const handleAuthError = (dispatch, failureAction) => error =>
+  manageError(error, { logoutOnUnauthorized: true })
+    .then(result => {
+      if (result?.unauthorized) {
+        dispatch(logout());
+        return;
+      }
+      if (failureAction) {
+        dispatch(failureAction(result));
+      }
+    });
+
 ///
 /// LOGIN ACTIONS
 ///
@@ -59,6 +72,10 @@ export const submitLoginSuccess = (username, token) => ({
 export const submitLoginFailure = message => ({
   type: SUBMIT_LOGIN_FAILURE,
   payload: { message }
+});
+
+export const logout = () => ({
+  type: LOGOUT
 });
 
 ///
@@ -84,8 +101,7 @@ export const createAccount = account => (dispatch, getState) => {
   fetch(`${url}/password`, authHeader(getState().connectedUser.token, post))
     .then(response => processHttpStatus(response))
     .then(() => dispatch(createAccountSuccess(account)))
-    .catch(error => manageError(error)
-    .then(message => dispatch(createAccountFailure(message))));
+    .catch(error => handleAuthError(dispatch, createAccountFailure)(error));
 };
 
 export const createAccountSuccess = account => ({
@@ -107,8 +123,7 @@ export const readAccounts = searchFilter => (dispatch, getState) => {
   fetch(readUrl, authHeader(getState().connectedUser.token))
     .then(response => processHttpStatus(response))
     .then(json => dispatch(readAccountsSuccess(json)))
-    .catch(error => manageError(error)
-    .then(message => dispatch(readAccountsFailure(message))));
+    .catch(error => handleAuthError(dispatch, () => readAccountsFailure())(error));
 }
 
 export const readAccountsSuccess = accounts => ({
@@ -151,8 +166,7 @@ export const updateAccount = (index, account) => (dispatch, getState) => {
   fetch(`${url}/password`, authHeader(getState().connectedUser.token, put))
   .then(response => processHttpStatus(response))
   .then(() => dispatch(updateAccountSuccess(index, account)))
-  .catch(error => manageError(error)
-  .then(message => dispatch(updateAccountFailure(message))));
+  .catch(error => handleAuthError(dispatch, updateAccountFailure)(error));
 };
 
 export const updateAccountSuccess = (index, account) => ({
@@ -174,8 +188,7 @@ export const deleteAccount = index => (dispatch, getState) => {
   fetch(`${url}/password/${getState().accountList.accounts[index].id}`, authHeader(getState().connectedUser.token, delete_))
   .then(response => processHttpStatus(response))
   .then(() => dispatch(deleteAccountSuccess(index)))
-  .catch(error => manageError(error)
-  .then(message => dispatch(deleteAccountFailure(message))));
+  .catch(error => handleAuthError(dispatch, deleteAccountFailure)(error));
 };
 
 export const deleteAccountSuccess = index => ({

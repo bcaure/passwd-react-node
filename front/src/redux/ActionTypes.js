@@ -1,5 +1,6 @@
 export const SUBMIT_LOGIN_SUCCESS = 'SUBMIT_LOGIN_SUCCESS';
 export const SUBMIT_LOGIN_FAILURE = 'SUBMIT_LOGIN_FAILURE';
+export const LOGOUT = 'LOGOUT';
 
 export const SELECT_ROW = 'SELECT_ROW';
 export const UPDATE_NEW_ROW = 'UPDATE_NEW_ROW';
