@@ -1,5 +1,5 @@
 # Passwords React/Node.js app
-
+ 
 Password manager with a React frontend and Node.js/Express backend, targeting **Node.js 24**, **React 19**, and **MariaDB 11.8**.
 
 ## Requirements
