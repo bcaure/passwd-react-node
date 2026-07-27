@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `site` (
 CREATE TABLE IF NOT EXISTS `compte` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `login` varchar(50) NOT NULL,
-  `mdp` varchar(50) NOT NULL,
+  `mdp` varchar(500) NOT NULL,
   `id_site` int(11) NOT NULL,
   `user` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
