@@ -175,7 +175,7 @@ PW_VIDEO=on PW_SLOWMO=350 npm run test:e2e    # record videos in slow motion
 npm run test:e2e:report                       # open the HTML report
 ```
 
-The test user is `ben` / `testpass123` (seeded by the reset script).
+The test user is `devuser` / `dev-fake-password-123` (seeded by the reset script).
 
 
 - Frontend migrated from Create React App (React 16) to **Vite + React 19**

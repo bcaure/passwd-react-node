@@ -11,7 +11,7 @@ test.describe('Authentication', () => {
 
     await expect(page.getByTestId('accounts-table')).toBeVisible();
     await expect(page.getByTestId('account-count')).toHaveText(String(SEEDED_ACCOUNT_COUNT));
-    await expect(page.getByTestId('user-initials')).toHaveText('B');
+    await expect(page.getByTestId('user-initials')).toHaveText('D');
   });
 
   test('rejects invalid credentials with an error message', async ({ page }) => {

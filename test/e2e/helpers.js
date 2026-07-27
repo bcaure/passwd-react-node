@@ -5,11 +5,11 @@ const { expect } = require('@playwright/test');
 const ROOT = path.join(__dirname, '../..');
 
 const CREDENTIALS = {
-  username: 'ben',
-  password: 'testpass123'
+  username: 'devuser',
+  password: 'dev-fake-password-123'
 };
 
-// Number of accounts seeded for the "ben" user (see db/init-mariadb-11.8.sql).
+// Number of accounts seeded for the "devuser" user (see db/init-mariadb-11.8.sql).
 const SEEDED_ACCOUNT_COUNT = 8;
 
 function resetDatabase() {
