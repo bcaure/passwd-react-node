@@ -3,8 +3,8 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const API_URL = process.env.API_URL || 'http://127.0.0.1:3001/api';
-const TEST_USER = process.env.TEST_USER || 'ben';
-const TEST_PASSWORD = process.env.TEST_PASSWORD || 'testpass123';
+const TEST_USER = process.env.TEST_USER || 'devuser';
+const TEST_PASSWORD = process.env.TEST_PASSWORD || 'dev-fake-password-123';
 
 async function expectStatus(response, expectedStatus, label) {
   if (response.status !== expectedStatus) {
@@ -55,13 +55,13 @@ export async function runApiIntegrationTests() {
   assert.ok(Array.isArray(accounts), 'password list should return an array');
   assert.ok(accounts.length > 0, 'password list should not be empty');
 
-  const searchResponse = await fetch(`${API_URL}/password?search=Adobe`, {
+  const searchResponse = await fetch(`${API_URL}/password?search=Example`, {
     headers: { Authorization: token }
   });
   await expectStatus(searchResponse, 200, 'password search');
   const searchResults = await searchResponse.json();
   assert.ok(
-    searchResults.some((account) => account.name === 'Adobe'),
+    searchResults.some((account) => account.name === 'Example Shop'),
     'search should return matching accounts'
   );
 

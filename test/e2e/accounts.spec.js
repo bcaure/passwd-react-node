@@ -9,15 +9,15 @@ test.describe('Account listing and search', () => {
 
   test('lists all seeded accounts for the user', async ({ page }) => {
     await expect(page.getByTestId('account-row')).toHaveCount(SEEDED_ACCOUNT_COUNT);
-    await expect(accountRow(page, 'Adobe')).toBeVisible();
-    await expect(accountRow(page, '3 Suisses')).toBeVisible();
+    await expect(accountRow(page, 'Example Shop')).toBeVisible();
+    await expect(accountRow(page, 'Fake Store')).toBeVisible();
   });
 
   test('filters accounts using the search field', async ({ page }) => {
-    await page.getByTestId('search-filter').pressSequentially('Adobe');
+    await page.getByTestId('search-filter').pressSequentially('Example');
 
     // The search input debounces for 2s before querying the backend.
     await expect(page.getByTestId('account-row')).toHaveCount(1, { timeout: 10_000 });
-    await expect(accountRow(page, 'Adobe')).toBeVisible();
+    await expect(accountRow(page, 'Example Shop')).toBeVisible();
   });
 });

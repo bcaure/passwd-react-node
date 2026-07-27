@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-TEST_PASSWORD="${TEST_PASSWORD:-testpass123}"
+TEST_PASSWORD="${TEST_PASSWORD:-dev-fake-password-123}"
 
 echo "Starting MariaDB..."
 sudo service mariadb start >/dev/null 2>&1 || true
@@ -20,9 +20,9 @@ SQL
 sudo mariadb passwd < "${ROOT_DIR}/db/init-mariadb-11.8.sql"
 sudo mariadb passwd < "${ROOT_DIR}/db/migrate-date-quota-nullable.sql" 2>/dev/null || true
 
-echo "Setting known test credentials for user ben..."
+echo "Setting known test credentials for user devuser..."
 HASH="$(node -e "process.stdout.write(require('${ROOT_DIR}/back/node_modules/bcryptjs').hashSync('${TEST_PASSWORD}', 10))")"
 mariadb -u passwd -ppasswd -h 127.0.0.1 passwd -e \
-  "UPDATE user SET password='${HASH}', used_quota=0 WHERE login='ben';"
+  "UPDATE user SET password='${HASH}', used_quota=0 WHERE login='devuser';"
 
 echo "Database ready."

@@ -22,9 +22,9 @@ test.describe('Full user journey', () => {
     await expect(page.getByTestId('account-count')).toHaveText(String(SEEDED_ACCOUNT_COUNT));
 
     // 2. Search for an account (input debounces ~2s before querying)
-    await page.getByTestId('search-filter').pressSequentially('Adobe');
+    await page.getByTestId('search-filter').pressSequentially('Example');
     await expect(page.getByTestId('account-row')).toHaveCount(1, { timeout: 10_000 });
-    await expect(accountRow(page, 'Adobe')).toBeVisible();
+    await expect(accountRow(page, 'Example Shop')).toBeVisible();
 
     // 3. Clear the search to see all accounts again
     await page.getByTestId('search-filter').fill('');
@@ -44,16 +44,16 @@ test.describe('Full user journey', () => {
     await expect(page.getByTestId('account-count')).toHaveText(String(SEEDED_ACCOUNT_COUNT + 1));
 
     // 5. Edit an existing account's password
-    await accountRow(page, 'Adobe').scrollIntoViewIfNeeded();
-    await accountRow(page, 'Adobe').getByTestId('row-edit').click();
-    await page.getByTestId('row-password').fill('adobe-pass-updated');
+    await accountRow(page, 'Example Shop').scrollIntoViewIfNeeded();
+    await accountRow(page, 'Example Shop').getByTestId('row-edit').click();
+    await page.getByTestId('row-password').fill('example-shop-pass-updated');
     await page.getByTestId('row-validate').click();
-    await expect(accountRow(page, 'Adobe').getByTestId('row-col-password')).toHaveText('adobe-pass-updated');
+    await expect(accountRow(page, 'Example Shop').getByTestId('row-col-password')).toHaveText('example-shop-pass-updated');
 
     // 6. Delete an existing account
-    await accountRow(page, '3 Suisses').scrollIntoViewIfNeeded();
-    await accountRow(page, '3 Suisses').getByTestId('row-delete').click();
-    await expect(accountRow(page, '3 Suisses')).toHaveCount(0);
+    await accountRow(page, 'Fake Store').scrollIntoViewIfNeeded();
+    await accountRow(page, 'Fake Store').getByTestId('row-delete').click();
+    await expect(accountRow(page, 'Fake Store')).toHaveCount(0);
     // Started with SEEDED_ACCOUNT_COUNT, +1 created, -1 deleted.
     await expect(page.getByTestId('account-count')).toHaveText(String(SEEDED_ACCOUNT_COUNT));
 
@@ -62,7 +62,7 @@ test.describe('Full user journey', () => {
     await login(page, CREDENTIALS.username, CREDENTIALS.password);
     await expect(page.getByTestId('account-count')).toHaveText(String(SEEDED_ACCOUNT_COUNT));
     await expect(accountRow(page, 'Demo Site')).toBeVisible();
-    await expect(accountRow(page, 'Adobe').getByTestId('row-col-password')).toHaveText('adobe-pass-updated');
-    await expect(accountRow(page, '3 Suisses')).toHaveCount(0);
+    await expect(accountRow(page, 'Example Shop').getByTestId('row-col-password')).toHaveText('example-shop-pass-updated');
+    await expect(accountRow(page, 'Fake Store')).toHaveCount(0);
   });
 });

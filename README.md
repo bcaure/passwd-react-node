@@ -60,9 +60,6 @@ The app runs on port `3000` and proxies `/api` requests to the backend.
 | `DATASOURCE_PASSWORD` | MariaDB password |
 | `DATASOURCE_DATABASE` | Database name |
 | `SECRET` | JWT signing secret |
-| `TRUST_PROXY` | Set to `1` when the API runs behind a reverse proxy (required for accurate login rate limiting) |
-| `LOGIN_RATE_LIMIT_MAX` | Max login attempts per IP per window (default: 10) |
-| `LOGIN_RATE_LIMIT_WINDOW_MS` | Login rate-limit window in milliseconds (default: 60000) |
 | `PORT` | API port (default: 3001) |
 | `STATIC_DIR` | Optional path to serve the frontend build |
 
@@ -178,7 +175,7 @@ PW_VIDEO=on PW_SLOWMO=350 npm run test:e2e    # record videos in slow motion
 npm run test:e2e:report                       # open the HTML report
 ```
 
-The test user is `ben` / `testpass123` (seeded by the reset script).
+The test user is `devuser` / `dev-fake-password-123` (seeded by the reset script).
 
 
 - Frontend migrated from Create React App (React 16) to **Vite + React 19**

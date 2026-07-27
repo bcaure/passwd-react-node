@@ -32,7 +32,7 @@ test.describe('Account CRUD operations', () => {
   });
 
   test('edits an existing account password', async ({ page }) => {
-    const row = accountRow(page, 'Adobe');
+    const row = accountRow(page, 'Example Shop');
     await row.getByTestId('row-edit').click();
 
     const passwordField = page.getByTestId('row-password');
@@ -45,21 +45,21 @@ test.describe('Account CRUD operations', () => {
     // Reload to confirm the change was persisted in MariaDB.
     await page.reload();
     await loginAndWaitForAccounts(page);
-    await expect(accountRow(page, 'Adobe').getByTestId('row-col-password')).toHaveText('updated-password');
+    await expect(accountRow(page, 'Example Shop').getByTestId('row-col-password')).toHaveText('updated-password');
   });
 
   test('deletes an account', async ({ page }) => {
-    await expect(accountRow(page, 'Adobe')).toBeVisible();
+    await expect(accountRow(page, 'Example Shop')).toBeVisible();
 
-    await accountRow(page, 'Adobe').getByTestId('row-delete').click();
+    await accountRow(page, 'Example Shop').getByTestId('row-delete').click();
 
     await expect(page.getByTestId('account-count')).toHaveText(String(SEEDED_ACCOUNT_COUNT - 1));
-    await expect(accountRow(page, 'Adobe')).toHaveCount(0);
+    await expect(accountRow(page, 'Example Shop')).toHaveCount(0);
 
     // Confirm the deletion persisted server-side.
     await page.reload();
     await loginAndWaitForAccounts(page);
-    await expect(accountRow(page, 'Adobe')).toHaveCount(0);
+    await expect(accountRow(page, 'Example Shop')).toHaveCount(0);
     await expect(page.getByTestId('account-count')).toHaveText(String(SEEDED_ACCOUNT_COUNT - 1));
   });
 });

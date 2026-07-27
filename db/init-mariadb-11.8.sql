@@ -1,5 +1,6 @@
 -- MariaDB 11.8 schema for local development
 -- Compatible with the passwd Node.js backend
+-- Seed data below is intentionally fake (example.dev) — not real credentials.
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -34,30 +35,30 @@ CREATE TABLE IF NOT EXISTS `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO `site` (`id`, `url`, `libelle`) VALUES
-(297, 'https://ftp://ftp.0fees.net', '0fees'),
-(298, 'https://www.centpourcentpiste.com/', '100% piste forum'),
-(299, 'http://www.3suisses.fr', '3 Suisses'),
-(300, 'https://www.abc-tabs.com', 'ABC Tabs'),
-(301, 'https://www.adobe.com', 'Adobe'),
-(302, 'https://www.ag2rlamondiale.fr', 'AG2R mutuelle'),
-(303, 'https://www.akr-performance.fr', 'AKR Performance'),
-(304, 'https://aliexpress.com', 'AliExpress'),
-(305, 'www.eallianz.fr', 'Allianz')
+(1, 'https://example.dev/shop', 'Example Shop'),
+(2, 'https://example.dev/forum', 'Demo Forum'),
+(3, 'https://example.dev/store', 'Fake Store'),
+(4, 'https://example.dev/tabs', 'Sample Tabs'),
+(5, 'https://example.dev/vendor', 'Mock Vendor'),
+(6, 'https://example.dev/mutuelle', 'Test Mutuelle'),
+(7, 'https://example.dev/parts', 'Dummy Parts'),
+(8, 'https://example.dev/mall', 'Placeholder Mall'),
+(9, 'https://example.dev/insurance', 'Fixture Insurance')
 ON DUPLICATE KEY UPDATE `url` = VALUES(`url`), `libelle` = VALUES(`libelle`);
 
 INSERT INTO `compte` (`id`, `login`, `mdp`, `id_site`, `user`) VALUES
-(187, 'fees0_2798528', 'azeqsd11', 297, 'ben'),
-(188, 'pjben', 'azeqsd1&', 298, 'ben'),
-(189, 'bcaure@netcourrier.com', 'azeqsd1&', 299, 'ben'),
-(190, 'pjben', 'azeqsd1&', 300, 'ben'),
-(191, 'bcaure@gmail.com', 'azeqsd1&', 301, 'ben'),
-(192, 'r8w7ud', 'azeqsd1&', 302, 'delphine'),
-(193, 'bcaure@gmail.com', 'azeqsd1&', 303, 'ben'),
-(194, 'bcaure@gmail.com', 'azeqsd11', 304, 'ben'),
-(195, 'bcaure@gmail.com', 'azeqsd11', 305, 'ben')
+(1, 'demo_user_1', 'fake-service-password-1', 1, 'devuser'),
+(2, 'demo_user_2', 'fake-service-password-2', 2, 'devuser'),
+(3, 'user@example.dev', 'fake-service-password-3', 3, 'devuser'),
+(4, 'demo_user_4', 'fake-service-password-4', 4, 'devuser'),
+(5, 'user@example.dev', 'fake-service-password-5', 5, 'devuser'),
+(6, 'demo_user_6', 'fake-service-password-6', 6, 'devuser2'),
+(7, 'user@example.dev', 'fake-service-password-7', 7, 'devuser'),
+(8, 'user@example.dev', 'fake-service-password-8', 8, 'devuser'),
+(9, 'user@example.dev', 'fake-service-password-9', 9, 'devuser')
 ON DUPLICATE KEY UPDATE `login` = VALUES(`login`), `mdp` = VALUES(`mdp`), `id_site` = VALUES(`id_site`), `user` = VALUES(`user`);
 
 INSERT INTO `user` (`login`, `password`, `date_quota`, `used_quota`) VALUES
-('ben', '$2a$10$foQevN/YkvcUWvtZYfUI/u2P.QS4U.79X3D1ALKm/E8sNPwi41IgC', '2010-08-19', 6),
-('delphine', '$2a$10$f0kEE7BSc9AD23RFDLKm1ez4sxwiH8DI19CEL/PhAdnWcM/I9d85O', '2016-03-20', 3)
+('devuser', '$2b$10$UVxidTZ7WPlLeRrvPxSDSuNK60Febw1Z7iyUS1L95DdNLXoNFTd0O', NULL, 0),
+('devuser2', '$2b$10$UVxidTZ7WPlLeRrvPxSDSuNK60Febw1Z7iyUS1L95DdNLXoNFTd0O', NULL, 0)
 ON DUPLICATE KEY UPDATE `password` = VALUES(`password`), `date_quota` = VALUES(`date_quota`), `used_quota` = VALUES(`used_quota`);

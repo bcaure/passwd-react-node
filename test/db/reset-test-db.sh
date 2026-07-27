@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Resets the test database to a known, deterministic state.
 # Truncates all tables, reseeds from the init SQL, and sets a known password
-# for the "ben" test user. Safe to run repeatedly (used by the E2E suite).
+# for the "devuser" test user. Safe to run repeatedly (used by the E2E suite).
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-TEST_PASSWORD="${TEST_PASSWORD:-testpass123}"
+TEST_PASSWORD="${TEST_PASSWORD:-dev-fake-password-123}"
 
 sudo service mariadb start >/dev/null 2>&1 || true
 
@@ -33,7 +33,7 @@ SQL
 sudo mariadb passwd < "${ROOT_DIR}/db/init-mariadb-11.8.sql" >/dev/null
 sudo mariadb passwd < "${ROOT_DIR}/db/migrate-date-quota-nullable.sql" 2>/dev/null || true
 
-# Set a known bcrypt password for the "ben" test user and reset its quota.
+# Set a known bcrypt password for the "devuser" test user and reset its quota.
 HASH="$(node -e "process.stdout.write(require('${ROOT_DIR}/back/node_modules/bcryptjs').hashSync('${TEST_PASSWORD}', 10))")"
 mariadb -u passwd -ppasswd -h 127.0.0.1 passwd -e \
-  "UPDATE user SET password='${HASH}', used_quota=0 WHERE login='ben';"
+  "UPDATE user SET password='${HASH}', used_quota=0 WHERE login='devuser';"

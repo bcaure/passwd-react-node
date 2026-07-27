@@ -75,7 +75,7 @@ async function main() {
 
   console.log('=== Passwd app verification ===');
 
-  console.log('\n[1/4] Setting up MariaDB test database...');
+  console.log('\n[1/5] Setting up MariaDB test database...');
   runSync('bash', [path.join(ROOT, 'test/db/setup-test-db.sh')]);
 
   console.log('\n[2/5] Running auth hardening tests...');
