@@ -86,6 +86,7 @@ async function main() {
   runSync('npm', ['run', 'build'], { cwd: path.join(ROOT, 'front') });
 
   console.log('\n[4/5] Starting backend and running API integration tests...');
+  runSync('node', [path.join(ROOT, 'test/api/crypto.test.mjs')]);
   const backend = spawn('node', ['--env-file=.env.test', 'server.js'], {
     cwd: path.join(ROOT, 'back'),
     env: {

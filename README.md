@@ -49,6 +49,17 @@ npm start
 
 The app runs on port `3000` and proxies `/api` requests to the backend.
 
+### 4. Encrypt existing service passwords (existing deployments)
+
+After setting `ENCRYPTION_KEY` in `back/.env`, run the one-time migration:
+
+```bash
+cd back
+npm run migrate:passwords
+```
+
+The script widens `compte.mdp` if needed and encrypts any plaintext rows. It is safe to run multiple times.
+
 ## Environment variables
 
 ### Backend (`back/.env`)
@@ -60,6 +71,7 @@ The app runs on port `3000` and proxies `/api` requests to the backend.
 | `DATASOURCE_PASSWORD` | MariaDB password |
 | `DATASOURCE_DATABASE` | Database name |
 | `SECRET` | JWT signing secret |
+| `ENCRYPTION_KEY` | Base64-encoded 32-byte key for encrypting stored service passwords (`openssl rand -base64 32`) |
 | `PORT` | API port (default: 3001) |
 | `STATIC_DIR` | Optional path to serve the frontend build |
 

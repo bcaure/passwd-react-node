@@ -37,3 +37,5 @@ sudo mariadb passwd < "${ROOT_DIR}/db/migrate-date-quota-nullable.sql" 2>/dev/nu
 HASH="$(node -e "process.stdout.write(require('${ROOT_DIR}/back/node_modules/bcryptjs').hashSync('${TEST_PASSWORD}', 10))")"
 mariadb -u passwd -ppasswd -h 127.0.0.1 passwd -e \
   "UPDATE user SET password='${HASH}', used_quota=0 WHERE login='devuser';"
+
+node --env-file="${ROOT_DIR}/back/.env.test" "${ROOT_DIR}/back/migrate-encrypt-passwords.js"

@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const { encrypt, decrypt } = require('./crypto');
 
 const QUOTA_MAX_ATTEMPTS = 50;
 const QUOTA_RESET_AFTER_DAYS = 50;
@@ -162,7 +163,7 @@ class Data {
             url: tableRow.url,
             name: tableRow.libelle,
             username: tableRow.login,
-            password: tableRow.mdp
+            password: decrypt(tableRow.mdp)
         };
     }
 
@@ -203,7 +204,7 @@ class Data {
             url: object.url,
             libelle: object.name,
             login: object.username,
-            mdp: object.password
+            mdp: encrypt(object.password)
         };
     }
 

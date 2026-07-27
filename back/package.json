@@ -9,6 +9,7 @@
   "scripts": {
     "debug": "nodemon --inspect server.js",
     "start": "node --env-file=.env server.js",
+    "migrate:passwords": "node --env-file=.env migrate-encrypt-passwords.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Benjamin CAURE",
