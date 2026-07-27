@@ -13,7 +13,10 @@ const datasource = {
 let con = mysql.createConnection(datasource);
 const Data = require('./data');
 const Jwt = require('./jwt');
+const { validateKey } = require('./crypto');
 const jwt = new Jwt();
+
+validateKey();
 
 app.use(bodyParser.json());
 app.use(cors());
