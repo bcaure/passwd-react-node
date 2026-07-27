@@ -60,6 +60,9 @@ The app runs on port `3000` and proxies `/api` requests to the backend.
 | `DATASOURCE_PASSWORD` | MariaDB password |
 | `DATASOURCE_DATABASE` | Database name |
 | `SECRET` | JWT signing secret |
+| `TRUST_PROXY` | Set to `1` when the API runs behind a reverse proxy (required for accurate login rate limiting) |
+| `LOGIN_RATE_LIMIT_MAX` | Max login attempts per IP per window (default: 10) |
+| `LOGIN_RATE_LIMIT_WINDOW_MS` | Login rate-limit window in milliseconds (default: 60000) |
 | `PORT` | API port (default: 3001) |
 | `STATIC_DIR` | Optional path to serve the frontend build |
 

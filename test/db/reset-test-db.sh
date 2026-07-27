@@ -20,6 +20,7 @@ SQL
 
 # Ensure schema exists, then wipe all data for a clean slate.
 sudo mariadb passwd < "${ROOT_DIR}/db/init-mariadb-11.8.sql" >/dev/null
+sudo mariadb passwd < "${ROOT_DIR}/db/migrate-date-quota-nullable.sql" 2>/dev/null || true
 mariadb -u passwd -ppasswd -h 127.0.0.1 passwd <<'SQL'
 SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE compte;
@@ -30,6 +31,7 @@ SQL
 
 # Reseed fresh data into the now-empty tables.
 sudo mariadb passwd < "${ROOT_DIR}/db/init-mariadb-11.8.sql" >/dev/null
+sudo mariadb passwd < "${ROOT_DIR}/db/migrate-date-quota-nullable.sql" 2>/dev/null || true
 
 # Set a known bcrypt password for the "ben" test user and reset its quota.
 HASH="$(node -e "process.stdout.write(require('${ROOT_DIR}/back/node_modules/bcryptjs').hashSync('${TEST_PASSWORD}', 10))")"

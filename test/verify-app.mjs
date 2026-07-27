@@ -6,6 +6,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runApiIntegrationTests } from './api/api-integration.test.mjs';
+import { runAuthHardeningTests, runLoginRateLimitTests } from './api/auth-hardening.test.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -77,11 +78,14 @@ async function main() {
   console.log('\n[1/4] Setting up MariaDB test database...');
   runSync('bash', [path.join(ROOT, 'test/db/setup-test-db.sh')]);
 
-  console.log('\n[2/4] Running frontend unit tests and build...');
+  console.log('\n[2/5] Running auth hardening tests...');
+  await runAuthHardeningTests();
+
+  console.log('\n[3/5] Running frontend unit tests and build...');
   runSync('npm', ['test'], { cwd: path.join(ROOT, 'front') });
   runSync('npm', ['run', 'build'], { cwd: path.join(ROOT, 'front') });
 
-  console.log('\n[3/4] Starting backend and running API integration tests...');
+  console.log('\n[4/5] Starting backend and running API integration tests...');
   const backend = spawn('node', ['--env-file=.env.test', 'server.js'], {
     cwd: path.join(ROOT, 'back'),
     env: {
@@ -102,8 +106,9 @@ async function main() {
   await waitForHttp(`${API_URL}/password`, 'Backend API');
   process.env.API_URL = API_URL;
   await runApiIntegrationTests();
+  await runLoginRateLimitTests();
 
-  console.log('\n[4/4] Starting frontend preview and checking UI bundle...');
+  console.log('\n[5/5] Starting frontend preview and checking UI bundle...');
   const preview = spawn('npm', ['run', 'preview', '--', '--host', '127.0.0.1', '--port', PREVIEW_PORT], {
     cwd: path.join(ROOT, 'front'),
     stdio: ['ignore', 'pipe', 'pipe']

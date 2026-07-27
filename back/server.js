@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const app = express();
 const cors = require('cors');
 const mysql = require('mysql2');
+const loginRateLimiter = require('./login-rate-limit');
 const datasource = {
     host: process.env.DATASOURCE_HOST,
     user: process.env.DATASOURCE_USER,
@@ -16,6 +17,10 @@ const jwt = new Jwt();
 
 app.use(bodyParser.json());
 app.use(cors());
+
+if (process.env.TRUST_PROXY === '1') {
+    app.set('trust proxy', 1);
+}
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 
@@ -189,17 +194,14 @@ routes = (application) => {
 
     /***** AUTHENTICATION API *****/
 
-    application.post('/api/login', (req, res) => {
+    application.post('/api/login', loginRateLimiter, (req, res) => {
         if (!req.body.username || !req.body.password) {
             return res.status(401).json({ message: 'Veuillez saisir un nom d\'utilisateur et un mot de passe' });
         }
 
         return new Data(con).authentify(req.body.username, req.body.password)
             .then(() => res.json({ token: jwt.generate(req.body.username) }))
-            .catch(err => {
-                console.error(err);
-                return res.status(401).json({ message: 'Nom d\'utilisateur ou mot de passe erroné' });
-            });
+            .catch(() => res.status(401).json({ message: 'Nom d\'utilisateur ou mot de passe erroné' }));
     });
 
 

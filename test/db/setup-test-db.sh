@@ -18,6 +18,7 @@ FLUSH PRIVILEGES;
 SQL
 
 sudo mariadb passwd < "${ROOT_DIR}/db/init-mariadb-11.8.sql"
+sudo mariadb passwd < "${ROOT_DIR}/db/migrate-date-quota-nullable.sql" 2>/dev/null || true
 
 echo "Setting known test credentials for user ben..."
 HASH="$(node -e "process.stdout.write(require('${ROOT_DIR}/back/node_modules/bcryptjs').hashSync('${TEST_PASSWORD}', 10))")"

@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `compte` (
 CREATE TABLE IF NOT EXISTS `user` (
   `login` varchar(20) NOT NULL,
   `password` varchar(1000) NOT NULL,
-  `date_quota` date NOT NULL,
+  `date_quota` date DEFAULT NULL,
   `used_quota` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`login`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

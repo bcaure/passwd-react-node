@@ -1,5 +1,12 @@
 const bcrypt = require('bcryptjs');
 
+const QUOTA_MAX_ATTEMPTS = 50;
+const QUOTA_RESET_AFTER_DAYS = 50;
+// Always run bcrypt.compare, even when the username does not exist. Without this
+// dummy hash, unknown usernames would fail before bcrypt and return faster than
+// known usernames, letting an attacker enumerate valid logins via response time.
+const DUMMY_PASSWORD_HASH = bcrypt.hashSync('__invalid_login_probe__', 10);
+
 const accountTable = 'compte';
 const siteTable = 'site';
 const userTable = 'user';
@@ -201,62 +208,76 @@ class Data {
     }
 
     authentify(username, password) {
+        return this.findUserForLogin(username)
+            .then(user => {
+                const storedHash = user ? user.password : DUMMY_PASSWORD_HASH;
+                const passwordMatches = bcrypt.compareSync(password, storedHash);
 
-        return this.checkAuthQuota(username)
-            .then(user => this.checkPassword(username, user.password, password))
-            .catch(error => this.updateAuthQuota(username, error));
-
-    }
-
-    checkAuthQuota(username) {
-        const queryQuota = `select login, used_quota, password from ${userTable} where login = ? `;
-        return new Promise((resolve, reject) => {
-            this.con.query(queryQuota, [username], (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    if (result && result.length > 0) {
-                        if (result[0].used_quota < 50) {
-                            resolve(result[0]);
-                        } else {
-                            reject('Quota exceeded for ' + username);
-                        }
-                    } else {
-                        reject('Unknown user: ' + username);
+                if (user && passwordMatches) {
+                    if (user.used_quota < QUOTA_MAX_ATTEMPTS) {
+                        return this.onAuthSuccess(user);
                     }
+                    return Promise.reject(new Error('AUTH_FAILED'));
                 }
+
+                if (user) {
+                    return this.recordAuthFailure(user.login)
+                        .then(() => Promise.reject(new Error('AUTH_FAILED')));
+                }
+
+                return Promise.reject(new Error('AUTH_FAILED'));
             });
-        });
     }
 
-    updateAuthQuota(username, initialError) {
-        const queryQuota = `update ${userTable} set used_quota= used_quota + 1 where login = ?`;
-        return new Promise((_resolve, reject) => {
-            this.con.query(queryQuota, [username], (err, _result) => {
+    findUserForLogin(username) {
+        const sql = `select login, used_quota, date_quota, password from ${userTable} where login = ?`;
+        return new Promise((resolve, reject) => {
+            this.con.query(sql, [username], (err, result) => {
                 if (err) {
                     reject(err);
                 } else {
-                    reject(initialError);
+                    resolve(result.length > 0 ? result[0] : null);
                 }
             });
         });
     }
 
-    checkPassword(username, realPassword, givenPassword) {
+    recordAuthFailure(username) {
+        const sql = `update ${userTable} set used_quota = used_quota + 1, date_quota = curdate() where login = ?`;
         return new Promise((resolve, reject) => {
+            this.con.query(sql, [username], (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
 
-            if (!bcrypt.compareSync(givenPassword, realPassword)) {
-                reject('wrong password for ' + username);
-            } else {
-                resolve();
-            }
-
+    onAuthSuccess(user) {
+        const sql = `
+            update ${userTable}
+            set used_quota = case
+                when date_quota is null then used_quota
+                when datediff(curdate(), date_quota) > ? then 0
+                else used_quota
+            end
+            where login = ?`;
+        return new Promise((resolve, reject) => {
+            this.con.query(sql, [QUOTA_RESET_AFTER_DAYS, user.login], (err) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
+            });
         });
     }
 
     insertUser(login, password) {
         return new Promise((resolve, reject) => {
-            this.con.query(`insert into ${userTable}(login, password, date_quota) values(?, ?, ?)`, [login, bcrypt.hashSync(password, 10), new Date()],
+            this.con.query(`insert into ${userTable}(login, password, date_quota) values(?, ?, null)`, [login, bcrypt.hashSync(password, 10)],
                 (error, _results, _fields) => this.manageTransaction(this.con, error, resolve, reject));
         });
     }
